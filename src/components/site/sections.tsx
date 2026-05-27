@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   ArrowUpRight, Sparkles, LineChart, Rocket, Layers, Compass, Send,
   Mail, ChevronDown, Star, Check, MessageCircle, Github, Linkedin, Twitter,
+  Phone, Instagram, Music,
 } from "lucide-react";
 import portrait from "@/assets/andrii-portrait.jpg";
 import heroBg from "@/assets/hero-bg.jpg";
@@ -347,91 +348,89 @@ export function FAQ() {
 /* -------------------- CONTACT -------------------- */
 export function Contact() {
   const { t } = useI18n();
-  const [step, setStep] = useState(0);
   const [sent, setSent] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", company: "", message: "" });
-  const next = () => setStep((s) => Math.min(2, s + 1));
-  const back = () => setStep((s) => Math.max(0, s - 1));
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
   const submit = (e: React.FormEvent) => { e.preventDefault(); setSent(true); };
+
+  const socials = [
+    { name: "Telegram", href: "https://t.me/", Icon: Send },
+    { name: "Viber", href: "viber://chat", Icon: Phone },
+    { name: "Instagram", href: "https://instagram.com/", Icon: Instagram },
+    { name: "LinkedIn", href: "https://linkedin.com/", Icon: Linkedin },
+    { name: "GitHub", href: "https://github.com/", Icon: Github },
+    { name: "TikTok", href: "https://tiktok.com/", Icon: Music },
+  ];
 
   return (
     <section id="contact" className="section-pad relative">
       <div className="container-px mx-auto max-w-6xl">
         <Reveal>
-          <div className="glass rounded-[2rem] p-8 md:p-16 grid lg:grid-cols-[1fr_1.2fr] gap-12 relative overflow-hidden">
-            <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-electric/20 blur-[140px]" />
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 relative">
+            <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-electric/10 blur-[140px] pointer-events-none" />
 
+            {/* LEFT: form */}
             <div className="relative">
               <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{t("contact.kicker")}</div>
               <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4vw,3.25rem)] leading-[1.05] text-gradient">{t("contact.title")}</h2>
-              <p className="mt-6 text-muted-foreground max-w-md leading-relaxed">{t("contact.body")}</p>
+              <p className="mt-4 text-muted-foreground leading-relaxed">{t("contact.body")}</p>
 
-              <div className="mt-10 space-y-3">
-                <a href="mailto:hi@andrii.studio" className="glass rounded-2xl px-5 py-4 flex items-center gap-3 hover:scale-[1.02] transition-transform">
-                  <Mail className="h-4 w-4 text-electric" />
-                  <span className="text-sm">hi@andrii.studio</span>
-                </a>
-                <a href="https://t.me/" target="_blank" rel="noreferrer" className="glass rounded-2xl px-5 py-4 flex items-center gap-3 hover:scale-[1.02] transition-transform">
-                  <Send className="h-4 w-4 text-electric" />
-                  <span className="text-sm">@andrii_kurshatsov</span>
-                </a>
-              </div>
-            </div>
-
-            <div className="relative">
               {sent ? (
-                <div className="h-full min-h-[400px] flex flex-col items-center justify-center text-center animate-[blur-in_0.8s_ease-out]">
-                  <div className="h-16 w-16 rounded-full bg-electric/10 flex items-center justify-center mb-6">
-                    <Check className="h-7 w-7 text-electric" />
+                <div className="mt-10 glass rounded-2xl p-8 flex flex-col items-center text-center animate-[blur-in_0.8s_ease-out]">
+                  <div className="h-14 w-14 rounded-full bg-electric/10 flex items-center justify-center mb-4">
+                    <Check className="h-6 w-6 text-electric" />
                   </div>
-                  <h3 className="font-display text-2xl">{t("contact.success.title")}</h3>
-                  <p className="text-muted-foreground mt-3 max-w-sm">{t("contact.success.body")}</p>
+                  <h3 className="font-display text-xl">{t("contact.success.title")}</h3>
+                  <p className="text-muted-foreground mt-2 text-sm">{t("contact.success.body")}</p>
                 </div>
               ) : (
-                <form onSubmit={submit} className="space-y-5">
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground font-mono">
-                    {[0, 1, 2].map((i) => (
-                      <div key={i} className={`h-1 flex-1 rounded-full transition-colors duration-500 ${i <= step ? "bg-electric" : "bg-border"}`} />
-                    ))}
-                    <span className="ml-3">{step + 1} / 3</span>
-                  </div>
-
-                  {step === 0 && (
-                    <div className="space-y-5 animate-[fade-up_0.5s_ease-out]">
-                      <Field label={t("contact.form.name")} value={form.name} onChange={(v) => setForm({ ...form, name: v })} />
-                      <Field label={t("contact.form.email")} type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
-                    </div>
-                  )}
-                  {step === 1 && (
-                    <div className="space-y-5 animate-[fade-up_0.5s_ease-out]">
-                      <Field label={t("contact.form.company")} value={form.company} onChange={(v) => setForm({ ...form, company: v })} />
-                    </div>
-                  )}
-                  {step === 2 && (
-                    <div className="space-y-5 animate-[fade-up_0.5s_ease-out]">
-                      <Field label={t("contact.form.message")} multiline value={form.message} onChange={(v) => setForm({ ...form, message: v })} />
-                    </div>
-                  )}
-
+                <form onSubmit={submit} className="mt-10 space-y-5">
+                  <Field label={t("contact.form.name")} value={form.name} onChange={(v) => setForm({ ...form, name: v })} />
+                  <Field label={t("contact.form.email")} type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
+                  <Field label={t("contact.form.message")} multiline value={form.message} onChange={(v) => setForm({ ...form, message: v })} />
                   <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" />
-
-                  <div className="flex items-center justify-between pt-2">
-                    <button type="button" onClick={back} disabled={step === 0}
-                            className="text-sm text-muted-foreground disabled:opacity-30 hover:text-foreground transition-colors">
-                      {t("contact.back")}
+                  <div className="pt-2">
+                    <button type="submit" className="btn-electric hover:btn-electric-hover rounded-full px-7 py-3 text-sm font-medium inline-flex items-center gap-2">
+                      <Sparkles className="h-4 w-4" /> {t("contact.send")}
                     </button>
-                    {step < 2 ? (
-                      <button type="button" onClick={next} className="btn-electric hover:btn-electric-hover rounded-full px-7 py-3 text-sm font-medium inline-flex items-center gap-2">
-                        {t("contact.continue")} <ArrowUpRight className="h-4 w-4" />
-                      </button>
-                    ) : (
-                      <button type="submit" className="btn-electric hover:btn-electric-hover rounded-full px-7 py-3 text-sm font-medium inline-flex items-center gap-2">
-                        {t("contact.send")} <Send className="h-4 w-4" />
-                      </button>
-                    )}
                   </div>
                 </form>
               )}
+            </div>
+
+            {/* RIGHT: socials */}
+            <div className="relative">
+              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{t("contact.socials")}</div>
+              <div className="grid grid-cols-2 gap-3">
+                {socials.map(({ name, href, Icon }) => (
+                  <a
+                    key={name}
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="glass rounded-2xl px-5 py-5 flex items-center gap-3 hover:scale-[1.02] hover:border-electric/40 transition-all group"
+                  >
+                    <Icon className="h-5 w-5 text-electric group-hover:scale-110 transition-transform" />
+                    <span className="text-sm font-medium">{name}</span>
+                  </a>
+                ))}
+              </div>
+
+              <div className="mt-3 glass rounded-2xl px-5 py-5">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+                  <MessageCircle className="h-4 w-4 text-electric" />
+                  <span>{t("contact.quick")}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <a href="https://t.me/" target="_blank" rel="noreferrer"
+                     className="rounded-full bg-foreground text-background px-5 py-2 text-sm font-medium hover:opacity-90 transition-opacity">
+                    Telegram
+                  </a>
+                  <a href="https://instagram.com/" target="_blank" rel="noreferrer"
+                     className="rounded-full border border-border px-5 py-2 text-sm font-medium hover:border-electric/60 hover:text-foreground transition-colors">
+                    Instagram
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </Reveal>
