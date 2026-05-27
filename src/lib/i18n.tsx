@@ -16,7 +16,7 @@ const en: Dict = {
   "hero.title.1": "Building",
   "hero.title.2": "premium brands",
   "hero.title.3": "that scale beyond noise.",
-  "hero.intro": "I'm Andrii Kurshatsov — strategist & product designer partnering with founders to launch digital products that feel inevitable.",
+  "hero.intro": "I'm Andrii Kurshatsov — strategist & product developer partnering with founders to launch digital products that feel inevitable.",
   "hero.cta.primary": "Start a project",
   "hero.cta.telegram": "Telegram",
   "hero.stats.projects": "Projects shipped",
