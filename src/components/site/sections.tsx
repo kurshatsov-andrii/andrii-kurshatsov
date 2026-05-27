@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   ArrowUpRight, Sparkles, LineChart, Rocket, Layers, Compass, Send,
   Mail, ChevronDown, Star, Check, MessageCircle, Github, Linkedin, Twitter,
+  Phone, Instagram, Music,
 } from "lucide-react";
 import portrait from "@/assets/andrii-portrait.jpg";
 import heroBg from "@/assets/hero-bg.jpg";
