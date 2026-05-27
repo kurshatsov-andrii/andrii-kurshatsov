@@ -8,6 +8,8 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { Nav } from "@/components/site/Nav";
+import { Footer, FloatingTelegram } from "@/components/site/sections";
 
 import appCss from "../styles.css?url";
 
