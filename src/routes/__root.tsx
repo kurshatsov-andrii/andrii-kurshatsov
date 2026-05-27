@@ -8,6 +8,8 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { Nav } from "@/components/site/Nav";
+import { Footer, FloatingTelegram } from "@/components/site/sections";
 
 import appCss from "../styles.css?url";
 
@@ -119,7 +121,12 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
-        <Outlet />
+        <main className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
+          <Nav />
+          <Outlet />
+          <Footer />
+          <FloatingTelegram />
+        </main>
       </I18nProvider>
     </QueryClientProvider>
   );

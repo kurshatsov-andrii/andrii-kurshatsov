@@ -43,7 +43,7 @@ export function Hero() {
 
           <Reveal delay={360}>
             <div className="mt-10 flex flex-wrap gap-4">
-              <a href="#contact" className="btn-electric hover:btn-electric-hover inline-flex items-center gap-2 rounded-full px-7 py-4 text-sm font-medium">
+              <a href="/contact" className="btn-electric hover:btn-electric-hover inline-flex items-center gap-2 rounded-full px-7 py-4 text-sm font-medium">
                 {t("hero.cta.primary")} <ArrowUpRight className="h-4 w-4" />
               </a>
               <a href="https://t.me/" target="_blank" rel="noreferrer"
@@ -163,7 +163,7 @@ export function Services() {
                   </div>
                   <h3 className="mt-8 font-display text-2xl">{s.title}</h3>
                   <p className="mt-3 text-muted-foreground leading-relaxed">{s.desc}</p>
-                  <a href="#contact" className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium group-hover:text-electric transition-colors">
+                  <a href="/contact" className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium group-hover:text-electric transition-colors">
                     {t("services.cta")} <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </a>
                 </div>
@@ -194,7 +194,7 @@ export function Portfolio() {
             <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.05] max-w-3xl text-gradient">{t("work.title")}</h2>
           </Reveal>
           <Reveal delay={200} className="hidden md:block">
-            <a href="#contact" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5">
+            <a href="/contact" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5">
               {t("work.archive")} <ArrowUpRight className="h-4 w-4" />
             </a>
           </Reveal>
