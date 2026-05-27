@@ -121,7 +121,12 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
-        <Outlet />
+        <main className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
+          <Nav />
+          <Outlet />
+          <Footer />
+          <FloatingTelegram />
+        </main>
       </I18nProvider>
     </QueryClientProvider>
   );
