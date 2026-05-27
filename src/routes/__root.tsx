@@ -83,8 +83,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "Lovable App" },
       { name: "twitter:description", content: "A premium personal brand website showcasing services, portfolio, and generating leads for entrepreneurs." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/85c2e4b3-f206-4047-80cb-3924a7ca95da/id-preview-938277b3--eab37717-5cc8-4f14-8804-9565b88e80bd.lovable.app-1779818903576.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/85c2e4b3-f206-4047-80cb-3924a7ca95da/id-preview-938277b3--eab37717-5cc8-4f14-8804-9565b88e80bd.lovable.app-1779818903576.png" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3bfb3ef1-c2c5-4341-ac5c-b5665eb8b3e6/id-preview-478b5b3f--eab37717-5cc8-4f14-8804-9565b88e80bd.lovable.app-1779819021287.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3bfb3ef1-c2c5-4341-ac5c-b5665eb8b3e6/id-preview-478b5b3f--eab37717-5cc8-4f14-8804-9565b88e80bd.lovable.app-1779819021287.png" },
     ],
     links: [
       {
