@@ -102,6 +102,22 @@ const en: Dict = {
   "contact.socials": "Find me",
   "contact.quick": "Quick contact: Telegram or Instagram",
 
+  "brief.kicker": "BRIEF",
+  "brief.title": "Fill out the brief — I'll get back to you",
+  "brief.service": "Service",
+  "brief.svc.1": "AI songs for business",
+  "brief.svc.2": "Video clips",
+  "brief.svc.3": "Video ads",
+  "brief.svc.4": "Websites for business",
+  "brief.desc": "Description — what you want to get",
+  "brief.desc.placeholder": "Tell about the task, brand, references, desired style and deadline…",
+  "brief.name": "Name (optional)",
+  "brief.channel": "Contact channel",
+  "brief.channel.phone": "Phone",
+  "brief.contact": "Contact",
+  "brief.submit": "Send brief",
+  "brief.sent": "Brief sent. I'll be in touch soon.",
+
   "footer.rights": "All rights reserved.",
 };
 
