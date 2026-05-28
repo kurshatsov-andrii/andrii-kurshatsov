@@ -543,10 +543,11 @@ export function Contact() {
                   <Field label={t("contact.form.email")} type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
                   <Field label={t("contact.form.message")} multiline value={form.message} onChange={(v) => setForm({ ...form, message: v })} />
                   <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" />
-                  <div className="pt-2">
-                    <button type="submit" className="btn-electric hover:btn-electric-hover rounded-full px-7 py-3 text-sm font-medium inline-flex items-center gap-2">
-                      <Sparkles className="h-4 w-4" /> {t("contact.send")}
+                  <div className="pt-2 flex items-center gap-4 flex-wrap">
+                    <button type="submit" disabled={sending} className="btn-electric hover:btn-electric-hover rounded-full px-7 py-3 text-sm font-medium inline-flex items-center gap-2 disabled:opacity-60">
+                      <Sparkles className="h-4 w-4" /> {sending ? "…" : t("contact.send")}
                     </button>
+                    {error && <span className="text-sm text-destructive">{error}</span>}
                   </div>
                 </form>
               )}
