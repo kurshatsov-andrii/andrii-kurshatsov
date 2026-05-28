@@ -291,14 +291,15 @@ export function BriefForm() {
         </div>
 
         <div className="mt-10 flex items-center gap-4 flex-wrap">
-          <button type="submit" className="btn-electric hover:btn-electric-hover inline-flex items-center gap-2 rounded-full px-7 py-4 text-sm font-medium">
-            <Sparkles className="h-4 w-4" /> {t("brief.submit")}
+          <button type="submit" disabled={sending} className="btn-electric hover:btn-electric-hover inline-flex items-center gap-2 rounded-full px-7 py-4 text-sm font-medium disabled:opacity-60">
+            <Sparkles className="h-4 w-4" /> {sending ? "…" : t("brief.submit")}
           </button>
           {sent && (
             <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
               <Check className="h-4 w-4 text-electric" /> {t("brief.sent")}
             </span>
           )}
+          {error && <span className="text-sm text-destructive">{error}</span>}
         </div>
       </form>
     </Reveal>
