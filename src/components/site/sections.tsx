@@ -199,12 +199,36 @@ export function BriefForm() {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const send = useServerFn(sendTelegram);
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSent(true);
-    setTimeout(() => setSent(false), 4000);
-    setDesc(""); setName(""); setContact("");
+    setError(null);
+    setSending(true);
+    try {
+      await send({
+        data: {
+          type: "brief",
+          fields: {
+            "Послуга": service,
+            "Опис": desc,
+            "Імʼя": name,
+            "Канал звʼязку": channel,
+            "Контакт": contact,
+          },
+        },
+      });
+      setSent(true);
+      setTimeout(() => setSent(false), 4000);
+      setDesc(""); setName(""); setContact("");
+    } catch (err) {
+      console.error(err);
+      setError("Не вдалося надіслати. Спробуйте ще раз.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
