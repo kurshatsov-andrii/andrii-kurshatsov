@@ -4,11 +4,13 @@ import {
   Mail, ChevronDown, Star, Check, MessageCircle, Github, Linkedin, Twitter,
   Phone, Instagram, Music,
 } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
 import portrait from "@/assets/andrii-portrait.jpg";
 import heroBg from "@/assets/hero-bg.jpg";
 import { Reveal } from "./Reveal";
 import { Counter } from "./Counter";
 import { useI18n } from "@/lib/i18n";
+import { sendTelegram } from "@/lib/telegram.functions";
 
 /* -------------------- HERO -------------------- */
 export function Hero() {
