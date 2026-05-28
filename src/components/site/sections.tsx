@@ -4,11 +4,13 @@ import {
   Mail, ChevronDown, Star, Check, MessageCircle, Github, Linkedin, Twitter,
   Phone, Instagram, Music,
 } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
 import portrait from "@/assets/andrii-portrait.jpg";
 import heroBg from "@/assets/hero-bg.jpg";
 import { Reveal } from "./Reveal";
 import { Counter } from "./Counter";
 import { useI18n } from "@/lib/i18n";
+import { sendTelegram } from "@/lib/telegram.functions";
 
 /* -------------------- HERO -------------------- */
 export function Hero() {
@@ -197,12 +199,36 @@ export function BriefForm() {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const send = useServerFn(sendTelegram);
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSent(true);
-    setTimeout(() => setSent(false), 4000);
-    setDesc(""); setName(""); setContact("");
+    setError(null);
+    setSending(true);
+    try {
+      await send({
+        data: {
+          type: "brief",
+          fields: {
+            "Послуга": service,
+            "Опис": desc,
+            "Імʼя": name,
+            "Канал звʼязку": channel,
+            "Контакт": contact,
+          },
+        },
+      });
+      setSent(true);
+      setTimeout(() => setSent(false), 4000);
+      setDesc(""); setName(""); setContact("");
+    } catch (err) {
+      console.error(err);
+      setError("Не вдалося надіслати. Спробуйте ще раз.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -265,14 +291,15 @@ export function BriefForm() {
         </div>
 
         <div className="mt-10 flex items-center gap-4 flex-wrap">
-          <button type="submit" className="btn-electric hover:btn-electric-hover inline-flex items-center gap-2 rounded-full px-7 py-4 text-sm font-medium">
-            <Sparkles className="h-4 w-4" /> {t("brief.submit")}
+          <button type="submit" disabled={sending} className="btn-electric hover:btn-electric-hover inline-flex items-center gap-2 rounded-full px-7 py-4 text-sm font-medium disabled:opacity-60">
+            <Sparkles className="h-4 w-4" /> {sending ? "…" : t("brief.submit")}
           </button>
           {sent && (
             <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
               <Check className="h-4 w-4 text-electric" /> {t("brief.sent")}
             </span>
           )}
+          {error && <span className="text-sm text-destructive">{error}</span>}
         </div>
       </form>
     </Reveal>
@@ -452,8 +479,33 @@ export function FAQ() {
 export function Contact() {
   const { t } = useI18n();
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const submit = (e: React.FormEvent) => { e.preventDefault(); setSent(true); };
+  const send = useServerFn(sendTelegram);
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setSending(true);
+    try {
+      await send({
+        data: {
+          type: "contact",
+          fields: {
+            "Імʼя": form.name,
+            "Email": form.email,
+            "Повідомлення": form.message,
+          },
+        },
+      });
+      setSent(true);
+    } catch (err) {
+      console.error(err);
+      setError("Не вдалося надіслати. Спробуйте ще раз.");
+    } finally {
+      setSending(false);
+    }
+  };
 
   const socials = [
     { name: "Telegram", href: "https://t.me/", Icon: Send },
@@ -491,10 +543,11 @@ export function Contact() {
                   <Field label={t("contact.form.email")} type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
                   <Field label={t("contact.form.message")} multiline value={form.message} onChange={(v) => setForm({ ...form, message: v })} />
                   <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" />
-                  <div className="pt-2">
-                    <button type="submit" className="btn-electric hover:btn-electric-hover rounded-full px-7 py-3 text-sm font-medium inline-flex items-center gap-2">
-                      <Sparkles className="h-4 w-4" /> {t("contact.send")}
+                  <div className="pt-2 flex items-center gap-4 flex-wrap">
+                    <button type="submit" disabled={sending} className="btn-electric hover:btn-electric-hover rounded-full px-7 py-3 text-sm font-medium inline-flex items-center gap-2 disabled:opacity-60">
+                      <Sparkles className="h-4 w-4" /> {sending ? "…" : t("contact.send")}
                     </button>
+                    {error && <span className="text-sm text-destructive">{error}</span>}
                   </div>
                 </form>
               )}
