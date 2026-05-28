@@ -102,6 +102,22 @@ const en: Dict = {
   "contact.socials": "Find me",
   "contact.quick": "Quick contact: Telegram or Instagram",
 
+  "brief.kicker": "BRIEF",
+  "brief.title": "Fill out the brief — I'll get back to you",
+  "brief.service": "Service",
+  "brief.svc.1": "AI songs for business",
+  "brief.svc.2": "Video clips",
+  "brief.svc.3": "Video ads",
+  "brief.svc.4": "Websites for business",
+  "brief.desc": "Description — what you want to get",
+  "brief.desc.placeholder": "Tell about the task, brand, references, desired style and deadline…",
+  "brief.name": "Name (optional)",
+  "brief.channel": "Contact channel",
+  "brief.channel.phone": "Phone",
+  "brief.contact": "Contact",
+  "brief.submit": "Send brief",
+  "brief.sent": "Brief sent. I'll be in touch soon.",
+
   "footer.rights": "All rights reserved.",
 };
 
@@ -202,6 +218,22 @@ const ua: Dict = {
   "contact.success.body": "Відповім протягом 24 годин — зазвичай швидше.",
   "contact.socials": "Знайди мене",
   "contact.quick": "Швидкий зв'язок: Telegram або Instagram",
+
+  "brief.kicker": "БРИФ",
+  "brief.title": "Заповніть бриф — і я зв'яжуся з вами",
+  "brief.service": "Послуга",
+  "brief.svc.1": "ШІ-пісні для бізнесу",
+  "brief.svc.2": "Відеокліпи",
+  "brief.svc.3": "Відеореклама",
+  "brief.svc.4": "Сайти для бізнесу",
+  "brief.desc": "Опис — що ви хочете отримати",
+  "brief.desc.placeholder": "Розкажіть про задачу, бренд, референси, бажаний стиль і дедлайн…",
+  "brief.name": "Ім'я (необов'язково)",
+  "brief.channel": "Канал зв'язку",
+  "brief.channel.phone": "Телефон",
+  "brief.contact": "Контакт",
+  "brief.submit": "Надіслати бриф",
+  "brief.sent": "Бриф надіслано. Скоро зв'яжуся.",
 
   "footer.rights": "Усі права захищені.",
 };
