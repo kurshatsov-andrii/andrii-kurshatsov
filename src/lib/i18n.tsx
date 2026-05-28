@@ -219,6 +219,22 @@ const ua: Dict = {
   "contact.socials": "Знайди мене",
   "contact.quick": "Швидкий зв'язок: Telegram або Instagram",
 
+  "brief.kicker": "БРИФ",
+  "brief.title": "Заповніть бриф — і я зв'яжуся з вами",
+  "brief.service": "Послуга",
+  "brief.svc.1": "ШІ-пісні для бізнесу",
+  "brief.svc.2": "Відеокліпи",
+  "brief.svc.3": "Відеореклама",
+  "brief.svc.4": "Сайти для бізнесу",
+  "brief.desc": "Опис — що ви хочете отримати",
+  "brief.desc.placeholder": "Розкажіть про задачу, бренд, референси, бажаний стиль і дедлайн…",
+  "brief.name": "Ім'я (необов'язково)",
+  "brief.channel": "Канал зв'язку",
+  "brief.channel.phone": "Телефон",
+  "brief.contact": "Контакт",
+  "brief.submit": "Надіслати бриф",
+  "brief.sent": "Бриф надіслано. Скоро зв'яжуся.",
+
   "footer.rights": "Усі права захищені.",
 };
 
