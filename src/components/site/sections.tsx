@@ -479,8 +479,33 @@ export function FAQ() {
 export function Contact() {
   const { t } = useI18n();
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const submit = (e: React.FormEvent) => { e.preventDefault(); setSent(true); };
+  const send = useServerFn(sendTelegram);
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setSending(true);
+    try {
+      await send({
+        data: {
+          type: "contact",
+          fields: {
+            "Імʼя": form.name,
+            "Email": form.email,
+            "Повідомлення": form.message,
+          },
+        },
+      });
+      setSent(true);
+    } catch (err) {
+      console.error(err);
+      setError("Не вдалося надіслати. Спробуйте ще раз.");
+    } finally {
+      setSending(false);
+    }
+  };
 
   const socials = [
     { name: "Telegram", href: "https://t.me/", Icon: Send },
