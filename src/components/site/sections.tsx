@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   ArrowUpRight, Sparkles, LineChart, Rocket, Layers, Compass, Send,
   Mail, ChevronDown, Star, Check, MessageCircle, Github, Linkedin, Twitter,
-  Phone, Instagram, Music,
+  Phone, Instagram, Music, Play, Globe,
 } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import portrait from "@/assets/andrii-portrait.jpg";
