@@ -10,6 +10,7 @@ const en: Dict = {
   "nav.work": "Work",
   "nav.clients": "Clients",
   "nav.faq": "FAQ",
+  "nav.contact": "Contact",
   "nav.cta": "Let's talk",
 
   "hero.badge": "Available for Q1 2026 partnerships",
@@ -132,6 +133,7 @@ const ua: Dict = {
   "nav.work": "Кейси",
   "nav.clients": "Клієнти",
   "nav.faq": "FAQ",
+  "nav.contact": "Контакти",
   "nav.cta": "Обговорити",
 
   "hero.badge": "Відкритий до партнерств у Q1 2026",
