@@ -307,46 +307,232 @@ export function BriefForm() {
 }
 
 /* -------------------- PORTFOLIO -------------------- */
+type PortfolioItem = {
+  title: string;
+  desc: string;
+  image: string;
+  badge?: string;
+  brand?: string;
+  tags?: string[];
+  links?: { web?: string; github?: string };
+};
+
+type PortfolioCategory = {
+  key: string;
+  label: string;
+  variant: "song" | "ad" | "clip" | "code";
+  items: PortfolioItem[];
+};
+
 export function Portfolio() {
   const { t } = useI18n();
-  const projects = [
-    { tag: "Fintech", title: "Northwind Capital", desc: t("work.1.desc"), span: "md:col-span-2 md:row-span-2", grad: "from-blue-600/30 to-indigo-900/30" },
-    { tag: "SaaS", title: "Lumen Labs", desc: t("work.2.desc"), span: "", grad: "from-electric/30 to-cyan-500/20" },
-    { tag: "Consumer", title: "Halo Audio", desc: t("work.3.desc"), span: "", grad: "from-purple-500/20 to-pink-500/10" },
-    { tag: "Web3", title: "Strato Protocol", desc: t("work.4.desc"), span: "md:col-span-2", grad: "from-sky-500/20 to-blue-800/30" },
+  const categories: PortfolioCategory[] = [
+    {
+      key: "songs",
+      label: t("work.cat.songs"),
+      variant: "song",
+      items: [
+        {
+          title: "Біжи як вовк",
+          desc: "Біжи як вовк — це мотиваційне віршоване повідомлення про марафон у місті Валки. Текст закликає до перемоги, наполегливості та внутрішньої сили, порівнюючи учасників до вовка — сильного й швидкого.",
+          image: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=1200&q=80",
+          badge: "Rock Run",
+          tags: ["rock", "music", "motivation"],
+        },
+        {
+          title: "Біжи. Реєструйся. Перемагай!",
+          desc: "Fartlek Events — це платформа для реєстрації на забіги та змагання по Україні. Вона пропонує простий доступ до маршруту через QR-квитки, швидкі результати та підтримку на кожному етапі.",
+          image: "https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=1200&q=80",
+          badge: "Rock Run",
+          tags: ["rock", "music", "motivation"],
+        },
+        {
+          title: "Крок за кроком",
+          desc: "Ця пісня пропонує мотиваційний підхід до досягнення цілей — крок за кроком. Вона описує внутрішню боротьбу, рішучість іти вперед, незважаючи на труднощі.",
+          image: "https://images.unsplash.com/photo-1486218119243-13883505764c?w=1200&q=80",
+          badge: "Rock Run",
+          tags: ["rock", "music", "motivation"],
+        },
+      ],
+    },
+    {
+      key: "ads",
+      label: t("work.cat.ads"),
+      variant: "ad",
+      items: [
+        {
+          title: "SiS Beta Fuel + Electrolytes",
+          desc: "SiS Beta Fuel + Electrolytes — точна енергія без провалу. Для тих, хто не зупиняється. Залишайся невпинним.",
+          image: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=1200&q=80",
+          badge: "YouTube",
+          brand: "SiS",
+        },
+        {
+          title: "Fartlek Events",
+          desc: "Fartlek Events — платформа реєстрації на забіги, трейли та змагання по всій Україні.",
+          image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200&q=80",
+          brand: "Fartlek Events",
+        },
+        {
+          title: "Nike. Just do it.",
+          desc: "Разом сильніші, ніж поодинці. Гонка — це не тільки про перемогу. Це про ритм, боротьбу і тих, хто біжить поруч.",
+          image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=1200&q=80",
+          brand: "Nike",
+        },
+      ],
+    },
+    {
+      key: "clips",
+      label: t("work.cat.clips"),
+      variant: "clip",
+      items: [
+        {
+          title: "Стукіт серця Незламного Ха",
+          desc: "Стукіт серця Незламного Ха, Наче шлях, де надія жива, Ритм тримає дороги й вітри, Поки місто живе всупереч тьмі.",
+          image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1200&q=80",
+          brand: "Гурт Фартлек",
+        },
+        {
+          title: "Біг вранці",
+          desc: "Місто ще спить, вулиці німі, Тихо кружляє вітер в тиші. Кроки лунають в ранковій млі, Я оживаю в своєму тілі.",
+          image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&q=80",
+          brand: "Гурт Фартлек",
+        },
+        {
+          title: "Біг вночі",
+          desc: "Тиша лягла на спини будинків, Місто заснуло, зникають картинки. Серце в грудях — як двигун, Я вдягаю кросівки, я вже в бігу.",
+          image: "https://images.unsplash.com/photo-1502904550040-7534597429ae?w=1200&q=80",
+          brand: "Гурт Фартлек",
+        },
+      ],
+    },
+    {
+      key: "code",
+      label: t("work.cat.code"),
+      variant: "code",
+      items: [
+        {
+          title: "Fartlek Events",
+          desc: "Fartlek Events — платформа реєстрації на забіги, трейли та змагання по всій Україні. QR-стартові пакети, миттєві результати, зручні протоколи.",
+          image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1200&q=80",
+          tags: ["React", "Supabase", "Tailwind", "Lovable"],
+          links: { web: "#", github: "#" },
+        },
+        {
+          title: "Kurshatsov.AI",
+          desc: "Куршацов Андрій — створює AI-контент нового покоління: пісні, відео, рекламу, цифрові продукти та інтерактивні вебпроєкти.",
+          image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80",
+          tags: ["React", "Supabase", "Tailwind", "Lovable"],
+          links: { web: "#", github: "#" },
+        },
+        {
+          title: "Дашборд спортивних подій України",
+          desc: "Сучасна платформа для пошуку забігів, трейлів, велоподій, змагань з плавання, триатлону та мультиспортивних подій по всій Україні.",
+          image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=1200&q=80",
+          tags: ["Supabase", "Tailwind", "Next JS", "Cursor"],
+          links: { web: "#", github: "#" },
+        },
+      ],
+    },
   ];
+
+  const [active, setActive] = useState(categories[0].key);
+  const current = categories.find((c) => c.key === active) ?? categories[0];
+
   return (
     <section id="work" className="section-pad relative">
       <div className="container-px mx-auto max-w-7xl">
-        <div className="flex items-end justify-between gap-8 mb-14">
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-14">
           <Reveal>
             <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{t("work.kicker")}</div>
-            <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.05] max-w-3xl text-gradient">{t("work.title")}</h2>
+            <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.05] max-w-2xl text-gradient">
+              {t("work.title")}
+            </h2>
+            <p className="mt-4 text-muted-foreground max-w-xl">{t("work.subtitle")}</p>
           </Reveal>
-          <Reveal delay={200} className="hidden md:block">
-            <a href="/contact" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5">
-              {t("work.archive")} <ArrowUpRight className="h-4 w-4" />
-            </a>
+
+          <Reveal delay={150}>
+            <div className="glass rounded-full p-1.5 inline-flex flex-wrap gap-1">
+              {categories.map((c) => (
+                <button
+                  key={c.key}
+                  onClick={() => setActive(c.key)}
+                  className={`px-5 py-2.5 rounded-full text-sm transition-all duration-300 ${
+                    active === c.key
+                      ? "bg-foreground text-background shadow-elegant"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {c.label}
+                </button>
+              ))}
+            </div>
           </Reveal>
         </div>
 
-        <div className="grid md:grid-cols-3 md:auto-rows-[260px] gap-5">
-          {projects.map((p, i) => (
-            <Reveal key={p.title} delay={i * 100} className={p.span}>
-              <a href="#" className="group relative block h-full min-h-[260px] rounded-3xl overflow-hidden glass hover:shadow-elegant transition-all duration-700 hover:-translate-y-1">
-                <div className={`absolute inset-0 bg-gradient-to-br ${p.grad}`} />
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,oklch(1_0_0/0.15),transparent_60%)]" />
-                <div className="absolute inset-0 p-7 flex flex-col justify-between">
-                  <span className="text-xs uppercase tracking-[0.18em] text-white/70 font-mono">{p.tag}</span>
-                  <div>
-                    <h3 className="font-display text-2xl md:text-3xl text-white">{p.title}</h3>
-                    <p className="text-white/70 mt-2 text-sm">{p.desc}</p>
-                  </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {current.items.map((item, i) => (
+            <Reveal key={`${current.key}-${item.title}`} delay={i * 100}>
+              <article className="glass rounded-3xl overflow-hidden h-full flex flex-col hover:shadow-elegant hover:-translate-y-1 transition-all duration-500">
+                <div className="relative aspect-[4/5] overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                    loading="lazy"
+                  />
+                  {item.badge && (
+                    <span className="absolute top-4 right-4 glass rounded-full px-3 py-1.5 text-xs text-white inline-flex items-center gap-1.5">
+                      {current.variant === "song" ? <Music className="h-3 w-3" /> : null}
+                      {item.badge}
+                    </span>
+                  )}
+                  {current.variant === "song" && (
+                    <button
+                      aria-label="Play"
+                      className="absolute bottom-4 left-4 h-12 w-12 rounded-full glass flex items-center justify-center text-white hover:scale-110 transition-transform"
+                    >
+                      <Play className="h-5 w-5 fill-current ml-0.5" />
+                    </button>
+                  )}
                 </div>
-                <div className="absolute top-5 right-5 h-10 w-10 rounded-full glass flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:translate-y-0 translate-y-2 transition-all duration-500">
-                  <ArrowUpRight className="h-4 w-4 text-white" />
+
+                <div className="p-6 flex flex-col gap-3 flex-1">
+                  {item.brand && (
+                    <div className="text-xs text-muted-foreground">{item.brand}</div>
+                  )}
+                  <h3 className="font-display text-xl text-foreground">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+
+                  {item.tags && item.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-auto pt-2">
+                      {item.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-xs px-3 py-1 rounded-full bg-electric/15 text-electric"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {item.links && (
+                    <div className="flex items-center gap-5 pt-3 mt-auto text-sm">
+                      {item.links.web && (
+                        <a href={item.links.web} className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground">
+                          <Globe className="h-4 w-4" /> Web
+                        </a>
+                      )}
+                      {item.links.github && (
+                        <a href={item.links.github} className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground">
+                          <Github className="h-4 w-4" /> GitHub
+                        </a>
+                      )}
+                    </div>
+                  )}
                 </div>
-              </a>
+              </article>
             </Reveal>
           ))}
         </div>
@@ -354,6 +540,7 @@ export function Portfolio() {
     </section>
   );
 }
+
 
 /* -------------------- ACHIEVEMENTS -------------------- */
 export function Achievements() {
