@@ -14,13 +14,138 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      page_sections: {
+        Row: {
+          data: Json
+          id: string
+          locale: string
+          page: string
+          section_key: string
+          updated_at: string
+        }
+        Insert: {
+          data?: Json
+          id?: string
+          locale: string
+          page: string
+          section_key: string
+          updated_at?: string
+        }
+        Update: {
+          data?: Json
+          id?: string
+          locale?: string
+          page?: string
+          section_key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      portfolio_items: {
+        Row: {
+          audio_url: string | null
+          category: string
+          cover_url: string | null
+          created_at: string
+          description_en: string | null
+          description_uk: string | null
+          external_url: string | null
+          id: string
+          sort_order: number
+          tags: string[]
+          title_en: string
+          title_uk: string
+          updated_at: string
+          video_platform: string | null
+          video_url: string | null
+        }
+        Insert: {
+          audio_url?: string | null
+          category: string
+          cover_url?: string | null
+          created_at?: string
+          description_en?: string | null
+          description_uk?: string | null
+          external_url?: string | null
+          id?: string
+          sort_order?: number
+          tags?: string[]
+          title_en?: string
+          title_uk?: string
+          updated_at?: string
+          video_platform?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          audio_url?: string | null
+          category?: string
+          cover_url?: string | null
+          created_at?: string
+          description_en?: string | null
+          description_uk?: string | null
+          external_url?: string | null
+          id?: string
+          sort_order?: number
+          tags?: string[]
+          title_en?: string
+          title_uk?: string
+          updated_at?: string
+          video_platform?: string | null
+          video_url?: string | null
+        }
+        Relationships: []
+      }
+      site_assets: {
+        Row: {
+          id: string
+          key: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          id?: string
+          key: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          id?: string
+          key?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
+      social_links: {
+        Row: {
+          id: string
+          label: string | null
+          platform: string
+          sort_order: number
+          url: string
+        }
+        Insert: {
+          id?: string
+          label?: string | null
+          platform: string
+          sort_order?: number
+          url: string
+        }
+        Update: {
+          id?: string
+          label?: string | null
+          platform?: string
+          sort_order?: number
+          url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
