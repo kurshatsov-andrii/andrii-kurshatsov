@@ -42,6 +42,8 @@ const SOCIAL_ICONS: Record<string, React.ComponentType<any>> = {
 /* -------------------- HERO -------------------- */
 export function Hero() {
   const { t } = useI18n();
+  const photo = useAboutPhoto();
+  const heroPhoto = photo ?? portrait;
   return (
     <section id="top" className="relative min-h-screen flex items-center overflow-hidden pt-32 pb-24">
       <div className="absolute inset-0 -z-10">
