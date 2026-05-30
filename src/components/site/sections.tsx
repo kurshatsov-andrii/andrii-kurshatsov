@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowUpRight, Sparkles, LineChart, Rocket, Layers, Compass, Send,
   Mail, ChevronDown, Star, Check, MessageCircle, Github, Linkedin, Twitter,
-  Phone, Instagram, Music, Play, Globe,
+  Phone, Instagram, Music, Play, Globe, Youtube, Video,
 } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import portrait from "@/assets/andrii-portrait.jpg";
@@ -11,10 +11,39 @@ import { Reveal } from "./Reveal";
 import { Counter } from "./Counter";
 import { useI18n } from "@/lib/i18n";
 import { sendTelegram } from "@/lib/telegram.functions";
+import { supabase } from "@/integrations/supabase/client";
+import { PORTFOLIO_CATEGORIES, type PortfolioRow } from "@/lib/portfolio";
+import { MediaModal } from "./MediaModal";
+
+function useAboutPhoto() {
+  const [url, setUrl] = useState<string | null>(null);
+  useEffect(() => {
+    supabase.from("site_assets").select("url").eq("key", "about_photo").maybeSingle()
+      .then(({ data }) => setUrl(data?.url ?? null));
+  }, []);
+  return url;
+}
+
+function useSocialLinks() {
+  const [items, setItems] = useState<{ platform: string; url: string; label: string | null }[]>([]);
+  useEffect(() => {
+    supabase.from("social_links").select("platform,url,label").order("sort_order")
+      .then(({ data }) => setItems((data ?? []) as any));
+  }, []);
+  return items;
+}
+
+const SOCIAL_ICONS: Record<string, React.ComponentType<any>> = {
+  telegram: Send, instagram: Instagram, tiktok: Music, youtube: Youtube,
+  facebook: Globe, twitter: Twitter, linkedin: Linkedin, github: Github,
+  viber: Phone, email: Mail, phone: Phone, website: Globe,
+};
 
 /* -------------------- HERO -------------------- */
 export function Hero() {
   const { t } = useI18n();
+  const photo = useAboutPhoto();
+  const heroPhoto = photo ?? portrait;
   return (
     <section id="top" className="relative min-h-screen flex items-center overflow-hidden pt-32 pb-24">
       <div className="absolute inset-0 -z-10">
