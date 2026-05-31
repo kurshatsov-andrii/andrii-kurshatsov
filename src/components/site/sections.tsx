@@ -336,137 +336,28 @@ export function BriefForm() {
 }
 
 /* -------------------- PORTFOLIO -------------------- */
-type PortfolioItem = {
-  title: string;
-  desc: string;
-  image: string;
-  badge?: string;
-  brand?: string;
-  tags?: string[];
-  links?: { web?: string; github?: string };
-};
-
-type PortfolioCategory = {
-  key: string;
-  label: string;
-  variant: "song" | "ad" | "clip" | "code";
-  items: PortfolioItem[];
-};
-
 export function Portfolio() {
-  const { t } = useI18n();
-  const categories: PortfolioCategory[] = [
-    {
-      key: "songs",
-      label: t("work.cat.songs"),
-      variant: "song",
-      items: [
-        {
-          title: "Біжи як вовк",
-          desc: "Біжи як вовк — це мотиваційне віршоване повідомлення про марафон у місті Валки. Текст закликає до перемоги, наполегливості та внутрішньої сили, порівнюючи учасників до вовка — сильного й швидкого.",
-          image: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=1200&q=80",
-          badge: "Rock Run",
-          tags: ["rock", "music", "motivation"],
-        },
-        {
-          title: "Біжи. Реєструйся. Перемагай!",
-          desc: "Fartlek Events — це платформа для реєстрації на забіги та змагання по Україні. Вона пропонує простий доступ до маршруту через QR-квитки, швидкі результати та підтримку на кожному етапі.",
-          image: "https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=1200&q=80",
-          badge: "Rock Run",
-          tags: ["rock", "music", "motivation"],
-        },
-        {
-          title: "Крок за кроком",
-          desc: "Ця пісня пропонує мотиваційний підхід до досягнення цілей — крок за кроком. Вона описує внутрішню боротьбу, рішучість іти вперед, незважаючи на труднощі.",
-          image: "https://images.unsplash.com/photo-1486218119243-13883505764c?w=1200&q=80",
-          badge: "Rock Run",
-          tags: ["rock", "music", "motivation"],
-        },
-      ],
-    },
-    {
-      key: "ads",
-      label: t("work.cat.ads"),
-      variant: "ad",
-      items: [
-        {
-          title: "SiS Beta Fuel + Electrolytes",
-          desc: "SiS Beta Fuel + Electrolytes — точна енергія без провалу. Для тих, хто не зупиняється. Залишайся невпинним.",
-          image: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=1200&q=80",
-          badge: "YouTube",
-          brand: "SiS",
-        },
-        {
-          title: "Fartlek Events",
-          desc: "Fartlek Events — платформа реєстрації на забіги, трейли та змагання по всій Україні.",
-          image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200&q=80",
-          brand: "Fartlek Events",
-        },
-        {
-          title: "Nike. Just do it.",
-          desc: "Разом сильніші, ніж поодинці. Гонка — це не тільки про перемогу. Це про ритм, боротьбу і тих, хто біжить поруч.",
-          image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=1200&q=80",
-          brand: "Nike",
-        },
-      ],
-    },
-    {
-      key: "clips",
-      label: t("work.cat.clips"),
-      variant: "clip",
-      items: [
-        {
-          title: "Стукіт серця Незламного Ха",
-          desc: "Стукіт серця Незламного Ха, Наче шлях, де надія жива, Ритм тримає дороги й вітри, Поки місто живе всупереч тьмі.",
-          image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1200&q=80",
-          brand: "Гурт Фартлек",
-        },
-        {
-          title: "Біг вранці",
-          desc: "Місто ще спить, вулиці німі, Тихо кружляє вітер в тиші. Кроки лунають в ранковій млі, Я оживаю в своєму тілі.",
-          image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&q=80",
-          brand: "Гурт Фартлек",
-        },
-        {
-          title: "Біг вночі",
-          desc: "Тиша лягла на спини будинків, Місто заснуло, зникають картинки. Серце в грудях — як двигун, Я вдягаю кросівки, я вже в бігу.",
-          image: "https://images.unsplash.com/photo-1502904550040-7534597429ae?w=1200&q=80",
-          brand: "Гурт Фартлек",
-        },
-      ],
-    },
-    {
-      key: "code",
-      label: t("work.cat.code"),
-      variant: "code",
-      items: [
-        {
-          title: "Fartlek Events",
-          desc: "Fartlek Events — платформа реєстрації на забіги, трейли та змагання по всій Україні. QR-стартові пакети, миттєві результати, зручні протоколи.",
-          image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1200&q=80",
-          tags: ["React", "Supabase", "Tailwind", "Lovable"],
-          links: { web: "#", github: "#" },
-        },
-        {
-          title: "Kurshatsov.AI",
-          desc: "Куршацов Андрій — створює AI-контент нового покоління: пісні, відео, рекламу, цифрові продукти та інтерактивні вебпроєкти.",
-          image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80",
-          tags: ["React", "Supabase", "Tailwind", "Lovable"],
-          links: { web: "#", github: "#" },
-        },
-        {
-          title: "Дашборд спортивних подій України",
-          desc: "Сучасна платформа для пошуку забігів, трейлів, велоподій, змагань з плавання, триатлону та мультиспортивних подій по всій Україні.",
-          image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=1200&q=80",
-          tags: ["Supabase", "Tailwind", "Next JS", "Cursor"],
-          links: { web: "#", github: "#" },
-        },
-      ],
-    },
-  ];
+  const { t, lang } = useI18n();
+  const isUk = lang === "ua";
+  const [dbItems, setDbItems] = useState<PortfolioRow[]>([]);
+  const [active, setActive] = useState<string>(PORTFOLIO_CATEGORIES[0].key);
+  const [modalItem, setModalItem] = useState<PortfolioRow | null>(null);
 
-  const [active, setActive] = useState(categories[0].key);
-  const current = categories.find((c) => c.key === active) ?? categories[0];
+  useEffect(() => {
+    supabase
+      .from("portfolio_items")
+      .select("*")
+      .order("category")
+      .order("sort_order")
+      .then(({ data }) => setDbItems((data ?? []) as PortfolioRow[]));
+  }, []);
+
+  const tabs = PORTFOLIO_CATEGORIES.map((c) => ({
+    key: c.key,
+    label: isUk ? c.labelUk : c.labelEn,
+  }));
+
+  const items = dbItems.filter((i) => i.category === active);
 
   return (
     <section id="work" className="section-pad relative">
@@ -482,7 +373,7 @@ export function Portfolio() {
 
           <Reveal delay={150}>
             <div className="glass rounded-full p-1.5 inline-flex flex-wrap gap-1">
-              {categories.map((c) => (
+              {tabs.map((c) => (
                 <button
                   key={c.key}
                   onClick={() => setActive(c.key)}
@@ -499,76 +390,76 @@ export function Portfolio() {
           </Reveal>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {current.items.map((item, i) => (
-            <Reveal key={`${current.key}-${item.title}`} delay={i * 100}>
-              <article className="glass rounded-3xl overflow-hidden h-full flex flex-col hover:shadow-elegant hover:-translate-y-1 transition-all duration-500">
-                <div className="relative aspect-[4/5] overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                    loading="lazy"
-                  />
-                  {item.badge && (
-                    <span className="absolute top-4 right-4 glass rounded-full px-3 py-1.5 text-xs text-white inline-flex items-center gap-1.5">
-                      {current.variant === "song" ? <Music className="h-3 w-3" /> : null}
-                      {item.badge}
-                    </span>
-                  )}
-                  {current.variant === "song" && (
-                    <button
-                      aria-label="Play"
-                      className="absolute bottom-4 left-4 h-12 w-12 rounded-full glass flex items-center justify-center text-white hover:scale-110 transition-transform"
-                    >
-                      <Play className="h-5 w-5 fill-current ml-0.5" />
-                    </button>
-                  )}
-                </div>
-
-                <div className="p-6 flex flex-col gap-3 flex-1">
-                  {item.brand && (
-                    <div className="text-xs text-muted-foreground">{item.brand}</div>
-                  )}
-                  <h3 className="font-display text-xl text-foreground">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-
-                  {item.tags && item.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-auto pt-2">
-                      {item.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-xs px-3 py-1 rounded-full bg-electric/15 text-electric"
-                        >
-                          {tag}
+        {items.length === 0 ? (
+          <div className="text-center text-muted-foreground py-20 glass rounded-3xl">
+            {isUk ? "Скоро тут зʼявляться роботи." : "Work coming soon."}
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {items.map((item, i) => {
+              const title = (isUk ? item.title_uk : item.title_en) || item.title_uk || item.title_en;
+              const desc = (isUk ? item.description_uk : item.description_en) || "";
+              const hasMedia = !!(item.video_url || item.audio_url);
+              return (
+                <Reveal key={item.id} delay={i * 80}>
+                  <article
+                    onClick={() => {
+                      if (hasMedia) setModalItem(item);
+                      else if (item.external_url) window.open(item.external_url, "_blank");
+                    }}
+                    className="glass rounded-3xl overflow-hidden h-full flex flex-col hover:shadow-elegant hover:-translate-y-1 transition-all duration-500 cursor-pointer"
+                  >
+                    <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+                      {item.cover_url && (
+                        <img
+                          src={item.cover_url}
+                          alt={title}
+                          className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                          loading="lazy"
+                        />
+                      )}
+                      {item.video_platform && (
+                        <span className="absolute top-4 right-4 glass rounded-full px-3 py-1.5 text-xs text-white inline-flex items-center gap-1.5 capitalize">
+                          <Video className="h-3 w-3" /> {item.video_platform}
                         </span>
-                      ))}
+                      )}
+                      {item.audio_url && (
+                        <button
+                          aria-label="Play"
+                          className="absolute bottom-4 left-4 h-12 w-12 rounded-full glass flex items-center justify-center text-white hover:scale-110 transition-transform"
+                        >
+                          <Play className="h-5 w-5 fill-current ml-0.5" />
+                        </button>
+                      )}
                     </div>
-                  )}
 
-                  {item.links && (
-                    <div className="flex items-center gap-5 pt-3 mt-auto text-sm">
-                      {item.links.web && (
-                        <a href={item.links.web} className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground">
-                          <Globe className="h-4 w-4" /> Web
-                        </a>
-                      )}
-                      {item.links.github && (
-                        <a href={item.links.github} className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground">
-                          <Github className="h-4 w-4" /> GitHub
-                        </a>
+                    <div className="p-6 flex flex-col gap-3 flex-1">
+                      <h3 className="font-display text-xl text-foreground">{title}</h3>
+                      {desc && <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>}
+
+                      {item.tags && item.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-auto pt-2">
+                          {item.tags.map((tag) => (
+                            <span key={tag} className="text-xs px-3 py-1 rounded-full bg-electric/15 text-electric">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
                       )}
                     </div>
-                  )}
-                </div>
-              </article>
-            </Reveal>
-          ))}
-        </div>
+                  </article>
+                </Reveal>
+              );
+            })}
+          </div>
+        )}
       </div>
+
+      <MediaModal item={modalItem} onClose={() => setModalItem(null)} />
     </section>
   );
 }
+
 
 
 /* -------------------- ACHIEVEMENTS -------------------- */
@@ -723,14 +614,18 @@ export function Contact() {
     }
   };
 
-  const socials = [
-    { name: "Telegram", href: "https://t.me/", Icon: Send },
-    { name: "Viber", href: "viber://chat", Icon: Phone },
-    { name: "Instagram", href: "https://instagram.com/", Icon: Instagram },
-    { name: "LinkedIn", href: "https://linkedin.com/", Icon: Linkedin },
-    { name: "GitHub", href: "https://github.com/", Icon: Github },
-    { name: "TikTok", href: "https://tiktok.com/", Icon: Music },
-  ];
+  const dbSocials = useSocialLinks();
+  const socials = dbSocials.length > 0
+    ? dbSocials.map((s) => ({
+        name: s.label || s.platform.charAt(0).toUpperCase() + s.platform.slice(1),
+        href: s.url,
+        Icon: SOCIAL_ICONS[s.platform] ?? Globe,
+      }))
+    : [
+        { name: "Telegram", href: "https://t.me/", Icon: Send },
+        { name: "Instagram", href: "https://instagram.com/", Icon: Instagram },
+      ];
+
 
   return (
     <section id="contact" className="section-pad relative">
