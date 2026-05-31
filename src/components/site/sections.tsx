@@ -97,7 +97,7 @@ export function Hero() {
 
         <Reveal delay={300} className="relative hidden lg:block">
           <div className="relative aspect-[4/5] rounded-3xl overflow-hidden glass shadow-elegant">
-            <img src={portrait} alt="Andrii Kurshatsov portrait" className="w-full h-full object-cover" width={1024} height={1280} fetchPriority="high" />
+            <img src={heroPhoto} alt="Andrii Kurshatsov portrait" className="w-full h-full object-cover" width={1024} height={1280} fetchPriority="high" />
             <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
             <div className="absolute bottom-6 left-6 right-6 glass rounded-2xl p-4">
               <div className="text-xs text-muted-foreground">{t("hero.currently")}</div>
