@@ -614,14 +614,18 @@ export function Contact() {
     }
   };
 
-  const socials = [
-    { name: "Telegram", href: "https://t.me/", Icon: Send },
-    { name: "Viber", href: "viber://chat", Icon: Phone },
-    { name: "Instagram", href: "https://instagram.com/", Icon: Instagram },
-    { name: "LinkedIn", href: "https://linkedin.com/", Icon: Linkedin },
-    { name: "GitHub", href: "https://github.com/", Icon: Github },
-    { name: "TikTok", href: "https://tiktok.com/", Icon: Music },
-  ];
+  const dbSocials = useSocialLinks();
+  const socials = dbSocials.length > 0
+    ? dbSocials.map((s) => ({
+        name: s.label || s.platform.charAt(0).toUpperCase() + s.platform.slice(1),
+        href: s.url,
+        Icon: SOCIAL_ICONS[s.platform] ?? Globe,
+      }))
+    : [
+        { name: "Telegram", href: "https://t.me/", Icon: Send },
+        { name: "Instagram", href: "https://instagram.com/", Icon: Instagram },
+      ];
+
 
   return (
     <section id="contact" className="section-pad relative">
