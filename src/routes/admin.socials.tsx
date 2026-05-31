@@ -70,10 +70,11 @@ function AdminSocials() {
               <select
                 value={it.platform}
                 onChange={(e) => update(i, { platform: e.target.value })}
-                className="w-full rounded-xl bg-input/50 border border-border px-3 py-2 text-sm"
+                className="w-full rounded-xl bg-input/50 border border-border px-3 py-2 text-sm text-foreground"
               >
-                {PLATFORMS.map((p) => <option key={p} value={p}>{p}</option>)}
+                {PLATFORMS.map((p) => <option key={p} value={p} className="bg-background text-foreground">{p}</option>)}
               </select>
+
             </label>
             <TextField label="URL" value={it.url} onChange={(v) => update(i, { url: v })} placeholder="https://..." />
             <TextField label="Підпис (необов.)" value={it.label ?? ""} onChange={(v) => update(i, { label: v })} />
