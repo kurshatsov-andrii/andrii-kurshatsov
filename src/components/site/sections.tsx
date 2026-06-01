@@ -46,6 +46,10 @@ export function Hero() {
   const { t } = useI18n();
   const photo = useAboutPhoto();
   const heroPhoto = photo ?? portrait;
+  const h = usePageSection("home", "hero");
+  const s = usePageSection("home", "hero_stats");
+  const g = (k: string, fb: string) => (h[k] && h[k].trim() ? h[k] : fb);
+  const gv = (k: string, fb: string) => (s[k] && s[k].trim() ? s[k] : fb);
   return (
     <section id="top" className="relative min-h-screen flex items-center overflow-hidden pt-32 pb-24">
       <div className="absolute inset-0 -z-10">
@@ -59,40 +63,40 @@ export function Hero() {
           <Reveal>
             <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 text-xs text-muted-foreground">
               <span className="h-1.5 w-1.5 rounded-full bg-electric animate-pulse" />
-              {t("hero.badge")}
+              {g("badge", t("hero.badge"))}
             </div>
           </Reveal>
 
           <Reveal delay={120}>
             <h1 className="mt-8 font-display font-semibold tracking-tighter text-[clamp(2.75rem,7vw,6rem)] leading-[0.95]">
-              {t("hero.title.1")} <span className="text-electric-gradient">{t("hero.title.2")}</span><br />
-              {t("hero.title.3")}
+              {g("title_1", t("hero.title.1"))} <span className="text-electric-gradient">{g("title_2", t("hero.title.2"))}</span><br />
+              {g("title_3", t("hero.title.3"))}
             </h1>
           </Reveal>
 
           <Reveal delay={240}>
-            <p className="mt-8 max-w-xl text-lg text-muted-foreground leading-relaxed">{t("hero.intro")}</p>
+            <p className="mt-8 max-w-xl text-lg text-muted-foreground leading-relaxed">{g("intro", t("hero.intro"))}</p>
           </Reveal>
 
           <Reveal delay={360}>
             <div className="mt-10 flex flex-wrap gap-4">
               <a href="/contact" className="btn-electric hover:btn-electric-hover inline-flex items-center gap-2 rounded-full px-7 py-4 text-sm font-medium">
-                {t("hero.cta.primary")} <ArrowUpRight className="h-4 w-4" />
+                {g("cta_primary", t("hero.cta.primary"))} <ArrowUpRight className="h-4 w-4" />
               </a>
               <a href="https://t.me/" target="_blank" rel="noreferrer"
                  className="glass inline-flex items-center gap-2 rounded-full px-7 py-4 text-sm font-medium hover:scale-[1.02] transition-transform">
-                <Send className="h-4 w-4" /> {t("hero.cta.telegram")}
+                <Send className="h-4 w-4" /> {g("cta_telegram", t("hero.cta.telegram"))}
               </a>
             </div>
           </Reveal>
 
           <Reveal delay={500}>
             <div className="mt-16 flex items-center gap-8 text-sm text-muted-foreground">
-              <div><span className="text-foreground font-semibold text-2xl font-display">120+</span><div className="text-xs mt-1">{t("hero.stats.projects")}</div></div>
+              <div><span className="text-foreground font-semibold text-2xl font-display">{gv("s1_value", "120+")}</span><div className="text-xs mt-1">{gv("s1_label", t("hero.stats.projects"))}</div></div>
               <div className="h-10 w-px bg-border" />
-              <div><span className="text-foreground font-semibold text-2xl font-display">9</span><div className="text-xs mt-1">{t("hero.stats.years")}</div></div>
+              <div><span className="text-foreground font-semibold text-2xl font-display">{gv("s2_value", "9")}</span><div className="text-xs mt-1">{gv("s2_label", t("hero.stats.years"))}</div></div>
               <div className="h-10 w-px bg-border" />
-              <div><span className="text-foreground font-semibold text-2xl font-display">14</span><div className="text-xs mt-1">{t("hero.stats.industries")}</div></div>
+              <div><span className="text-foreground font-semibold text-2xl font-display">{gv("s3_value", "14")}</span><div className="text-xs mt-1">{gv("s3_label", t("hero.stats.industries"))}</div></div>
             </div>
           </Reveal>
         </div>
@@ -102,8 +106,8 @@ export function Hero() {
             <img src={heroPhoto} alt="Andrii Kurshatsov portrait" className="w-full h-full object-cover" width={1024} height={1280} fetchPriority="high" />
             <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
             <div className="absolute bottom-6 left-6 right-6 glass rounded-2xl p-4">
-              <div className="text-xs text-muted-foreground">{t("hero.currently")}</div>
-              <div className="text-sm font-medium mt-1">{t("hero.currently.text")}</div>
+              <div className="text-xs text-muted-foreground">{g("currently", t("hero.currently"))}</div>
+              <div className="text-sm font-medium mt-1">{g("currently_text", t("hero.currently.text"))}</div>
             </div>
           </div>
           <div className="absolute -top-6 -right-6 glass rounded-2xl p-4 animate-[float_6s_ease-in-out_infinite]">
@@ -113,7 +117,7 @@ export function Hero() {
       </div>
 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-xs text-muted-foreground">
-        <span>{t("hero.scroll")}</span>
+        <span>{g("scroll", t("hero.scroll"))}</span>
         <div className="h-10 w-px bg-gradient-to-b from-electric to-transparent" />
       </div>
     </section>
