@@ -531,33 +531,49 @@ export function Achievements() {
 /* -------------------- TESTIMONIALS -------------------- */
 export function Testimonials() {
   const { t } = useI18n();
-  const quotes = [
-    { name: "Elena Marchetti", role: "CEO, Northwind Capital", text: t("tst.1") },
-    { name: "James Okafor", role: "Founder, Lumen Labs", text: t("tst.2") },
-    { name: "Sofia Hartmann", role: "CMO, Halo Audio", text: t("tst.3") },
+  const locale = useLocale();
+  const intro = usePageSection("testimonials", "intro");
+  const dbItems = useTestimonials();
+  const g = (k: string, fb: string) => (intro[k] && intro[k].trim() ? intro[k] : fb);
+  const fallback = [
+    { name: "Elena Marchetti", role_uk: "CEO, Northwind Capital", role_en: "CEO, Northwind Capital", text_uk: t("tst.1"), text_en: t("tst.1"), rating: 5, avatar_url: null as string | null },
+    { name: "James Okafor", role_uk: "Founder, Lumen Labs", role_en: "Founder, Lumen Labs", text_uk: t("tst.2"), text_en: t("tst.2"), rating: 5, avatar_url: null as string | null },
+    { name: "Sofia Hartmann", role_uk: "CMO, Halo Audio", role_en: "CMO, Halo Audio", text_uk: t("tst.3"), text_en: t("tst.3"), rating: 5, avatar_url: null as string | null },
   ];
+  const source = dbItems.length > 0 ? dbItems : fallback;
+  const quotes = source.map((q) => ({
+    name: q.name,
+    role: locale === "uk" ? q.role_uk : q.role_en,
+    text: locale === "uk" ? q.text_uk : q.text_en,
+    rating: q.rating,
+    avatar: q.avatar_url,
+  }));
   return (
     <section id="testimonials" className="section-pad relative">
       <div className="container-px mx-auto max-w-7xl">
         <Reveal>
-          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{t("tst.kicker")}</div>
-          <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.05] max-w-3xl text-gradient">{t("tst.title")}</h2>
+          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{g("kicker", t("tst.kicker"))}</div>
+          <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.05] max-w-3xl text-gradient">{g("title", t("tst.title"))}</h2>
         </Reveal>
 
         <div className="mt-14 grid md:grid-cols-3 gap-5">
           {quotes.map((q, i) => (
-            <Reveal key={q.name} delay={i * 120}>
+            <Reveal key={q.name + i} delay={i * 120}>
               <figure className="glass rounded-3xl p-8 h-full flex flex-col">
                 <div className="flex gap-1">
-                  {[...Array(5)].map((_, k) => (
+                  {[...Array(Math.max(1, Math.min(5, q.rating)))].map((_, k) => (
                     <Star key={k} className="h-4 w-4 fill-electric text-electric" />
                   ))}
                 </div>
                 <blockquote className="mt-6 text-lg leading-relaxed text-foreground/90">"{q.text}"</blockquote>
                 <figcaption className="mt-8 flex items-center gap-3 pt-6 border-t">
-                  <div className="h-10 w-10 rounded-full bg-gradient-to-br from-electric to-blue-700 flex items-center justify-center text-white text-sm font-medium">
-                    {q.name.charAt(0)}
-                  </div>
+                  {q.avatar ? (
+                    <img src={q.avatar} alt={q.name} className="h-10 w-10 rounded-full object-cover" />
+                  ) : (
+                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-electric to-blue-700 flex items-center justify-center text-white text-sm font-medium">
+                      {q.name.charAt(0)}
+                    </div>
+                  )}
                   <div>
                     <div className="text-sm font-medium">{q.name}</div>
                     <div className="text-xs text-muted-foreground">{q.role}</div>
@@ -575,27 +591,37 @@ export function Testimonials() {
 /* -------------------- FAQ -------------------- */
 export function FAQ() {
   const { t } = useI18n();
+  const locale = useLocale();
+  const intro = usePageSection("faq", "intro");
+  const dbItems = useFaqItems();
+  const g = (k: string, fb: string) => (intro[k] && intro[k].trim() ? intro[k] : fb);
   const [open, setOpen] = useState<number | null>(0);
-  const faqs = [
+  const fallback = [
     { q: t("faq.1.q"), a: t("faq.1.a") },
     { q: t("faq.2.q"), a: t("faq.2.a") },
     { q: t("faq.3.q"), a: t("faq.3.a") },
     { q: t("faq.4.q"), a: t("faq.4.a") },
     { q: t("faq.5.q"), a: t("faq.5.a") },
   ];
+  const faqs = dbItems.length > 0
+    ? dbItems.map((it) => ({
+        q: locale === "uk" ? it.question_uk : it.question_en,
+        a: locale === "uk" ? it.answer_uk : it.answer_en,
+      }))
+    : fallback;
   return (
     <section id="faq" className="section-pad relative">
       <div className="container-px mx-auto max-w-4xl">
         <Reveal>
-          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6 text-center">{t("faq.kicker")}</div>
-          <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4.5vw,3.5rem)] leading-[1.05] text-center text-gradient">{t("faq.title")}</h2>
+          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6 text-center">{g("kicker", t("faq.kicker"))}</div>
+          <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4.5vw,3.5rem)] leading-[1.05] text-center text-gradient">{g("title", t("faq.title"))}</h2>
         </Reveal>
 
         <div className="mt-14 space-y-3">
           {faqs.map((f, i) => {
             const isOpen = open === i;
             return (
-              <Reveal key={f.q} delay={i * 60}>
+              <Reveal key={f.q + i} delay={i * 60}>
                 <div className="glass rounded-2xl overflow-hidden">
                   <button onClick={() => setOpen(isOpen ? null : i)} className="w-full flex items-center justify-between gap-6 px-6 py-5 text-left">
                     <span className="font-display text-lg">{f.q}</span>
