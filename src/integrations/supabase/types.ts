@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      faq_items: {
+        Row: {
+          answer_en: string
+          answer_uk: string
+          created_at: string
+          id: string
+          question_en: string
+          question_uk: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          answer_en?: string
+          answer_uk?: string
+          created_at?: string
+          id?: string
+          question_en?: string
+          question_uk?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          answer_en?: string
+          answer_uk?: string
+          created_at?: string
+          id?: string
+          question_en?: string
+          question_uk?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       page_sections: {
         Row: {
           data: Json
@@ -95,6 +128,48 @@ export type Database = {
         }
         Relationships: []
       }
+      services_items: {
+        Row: {
+          created_at: string
+          desc_en: string
+          desc_uk: string
+          icon: string
+          id: string
+          price_en: string
+          price_uk: string
+          sort_order: number
+          title_en: string
+          title_uk: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          desc_en?: string
+          desc_uk?: string
+          icon?: string
+          id?: string
+          price_en?: string
+          price_uk?: string
+          sort_order?: number
+          title_en?: string
+          title_uk?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          desc_en?: string
+          desc_uk?: string
+          icon?: string
+          id?: string
+          price_en?: string
+          price_uk?: string
+          sort_order?: number
+          title_en?: string
+          title_uk?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_assets: {
         Row: {
           id: string
@@ -137,6 +212,48 @@ export type Database = {
           platform?: string
           sort_order?: number
           url?: string
+        }
+        Relationships: []
+      }
+      testimonials: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          id: string
+          name: string
+          rating: number
+          role_en: string
+          role_uk: string
+          sort_order: number
+          text_en: string
+          text_uk: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          rating?: number
+          role_en?: string
+          role_uk?: string
+          sort_order?: number
+          text_en?: string
+          text_uk?: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          rating?: number
+          role_en?: string
+          role_uk?: string
+          sort_order?: number
+          text_en?: string
+          text_uk?: string
+          updated_at?: string
         }
         Relationships: []
       }
