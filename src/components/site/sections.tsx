@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import * as LucideIcons from "lucide-react";
 import {
   ArrowUpRight, Sparkles, LineChart, Rocket, Layers, Compass, Send,
   Mail, ChevronDown, Star, Check, MessageCircle, Github, Linkedin, Twitter,
@@ -14,6 +15,7 @@ import { sendTelegram } from "@/lib/telegram.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { PORTFOLIO_CATEGORIES, type PortfolioRow } from "@/lib/portfolio";
 import { MediaModal } from "./MediaModal";
+import { usePageSection, useFaqItems, useTestimonials, useServicesItems, useLocale } from "@/lib/usePageData";
 
 function useAboutPhoto() {
   const [url, setUrl] = useState<string | null>(null);
@@ -44,6 +46,10 @@ export function Hero() {
   const { t } = useI18n();
   const photo = useAboutPhoto();
   const heroPhoto = photo ?? portrait;
+  const h = usePageSection("home", "hero");
+  const s = usePageSection("home", "hero_stats");
+  const g = (k: string, fb: string) => (h[k] && h[k].trim() ? h[k] : fb);
+  const gv = (k: string, fb: string) => (s[k] && s[k].trim() ? s[k] : fb);
   return (
     <section id="top" className="relative min-h-screen flex items-center overflow-hidden pt-32 pb-24">
       <div className="absolute inset-0 -z-10">
@@ -57,40 +63,40 @@ export function Hero() {
           <Reveal>
             <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 text-xs text-muted-foreground">
               <span className="h-1.5 w-1.5 rounded-full bg-electric animate-pulse" />
-              {t("hero.badge")}
+              {g("badge", t("hero.badge"))}
             </div>
           </Reveal>
 
           <Reveal delay={120}>
             <h1 className="mt-8 font-display font-semibold tracking-tighter text-[clamp(2.75rem,7vw,6rem)] leading-[0.95]">
-              {t("hero.title.1")} <span className="text-electric-gradient">{t("hero.title.2")}</span><br />
-              {t("hero.title.3")}
+              {g("title_1", t("hero.title.1"))} <span className="text-electric-gradient">{g("title_2", t("hero.title.2"))}</span><br />
+              {g("title_3", t("hero.title.3"))}
             </h1>
           </Reveal>
 
           <Reveal delay={240}>
-            <p className="mt-8 max-w-xl text-lg text-muted-foreground leading-relaxed">{t("hero.intro")}</p>
+            <p className="mt-8 max-w-xl text-lg text-muted-foreground leading-relaxed">{g("intro", t("hero.intro"))}</p>
           </Reveal>
 
           <Reveal delay={360}>
             <div className="mt-10 flex flex-wrap gap-4">
               <a href="/contact" className="btn-electric hover:btn-electric-hover inline-flex items-center gap-2 rounded-full px-7 py-4 text-sm font-medium">
-                {t("hero.cta.primary")} <ArrowUpRight className="h-4 w-4" />
+                {g("cta_primary", t("hero.cta.primary"))} <ArrowUpRight className="h-4 w-4" />
               </a>
               <a href="https://t.me/" target="_blank" rel="noreferrer"
                  className="glass inline-flex items-center gap-2 rounded-full px-7 py-4 text-sm font-medium hover:scale-[1.02] transition-transform">
-                <Send className="h-4 w-4" /> {t("hero.cta.telegram")}
+                <Send className="h-4 w-4" /> {g("cta_telegram", t("hero.cta.telegram"))}
               </a>
             </div>
           </Reveal>
 
           <Reveal delay={500}>
             <div className="mt-16 flex items-center gap-8 text-sm text-muted-foreground">
-              <div><span className="text-foreground font-semibold text-2xl font-display">120+</span><div className="text-xs mt-1">{t("hero.stats.projects")}</div></div>
+              <div><span className="text-foreground font-semibold text-2xl font-display">{gv("s1_value", "120+")}</span><div className="text-xs mt-1">{gv("s1_label", t("hero.stats.projects"))}</div></div>
               <div className="h-10 w-px bg-border" />
-              <div><span className="text-foreground font-semibold text-2xl font-display">9</span><div className="text-xs mt-1">{t("hero.stats.years")}</div></div>
+              <div><span className="text-foreground font-semibold text-2xl font-display">{gv("s2_value", "9")}</span><div className="text-xs mt-1">{gv("s2_label", t("hero.stats.years"))}</div></div>
               <div className="h-10 w-px bg-border" />
-              <div><span className="text-foreground font-semibold text-2xl font-display">14</span><div className="text-xs mt-1">{t("hero.stats.industries")}</div></div>
+              <div><span className="text-foreground font-semibold text-2xl font-display">{gv("s3_value", "14")}</span><div className="text-xs mt-1">{gv("s3_label", t("hero.stats.industries"))}</div></div>
             </div>
           </Reveal>
         </div>
@@ -100,8 +106,8 @@ export function Hero() {
             <img src={heroPhoto} alt="Andrii Kurshatsov portrait" className="w-full h-full object-cover" width={1024} height={1280} fetchPriority="high" />
             <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
             <div className="absolute bottom-6 left-6 right-6 glass rounded-2xl p-4">
-              <div className="text-xs text-muted-foreground">{t("hero.currently")}</div>
-              <div className="text-sm font-medium mt-1">{t("hero.currently.text")}</div>
+              <div className="text-xs text-muted-foreground">{g("currently", t("hero.currently"))}</div>
+              <div className="text-sm font-medium mt-1">{g("currently_text", t("hero.currently.text"))}</div>
             </div>
           </div>
           <div className="absolute -top-6 -right-6 glass rounded-2xl p-4 animate-[float_6s_ease-in-out_infinite]">
@@ -111,7 +117,7 @@ export function Hero() {
       </div>
 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-xs text-muted-foreground">
-        <span>{t("hero.scroll")}</span>
+        <span>{g("scroll", t("hero.scroll"))}</span>
         <div className="h-10 w-px bg-gradient-to-b from-electric to-transparent" />
       </div>
     </section>
@@ -121,21 +127,30 @@ export function Hero() {
 /* -------------------- ABOUT -------------------- */
 export function About() {
   const { t } = useI18n();
+  const m = usePageSection("about", "main");
+  const tl = usePageSection("about", "timeline");
+  const g = (k: string, fb: string) => (m[k] && m[k].trim() ? m[k] : fb);
+  const tg = (k: string, fb: string) => (tl[k] && tl[k].trim() ? tl[k] : fb);
   const timeline = [
-    { year: "2017", title: t("about.tl.1.title"), desc: t("about.tl.1.desc") },
-    { year: "2020", title: t("about.tl.2.title"), desc: t("about.tl.2.desc") },
-    { year: "2023", title: t("about.tl.3.title"), desc: t("about.tl.3.desc") },
-    { year: "2026", title: t("about.tl.4.title"), desc: t("about.tl.4.desc") },
+    { year: tg("y1", "2017"), title: tg("t1", t("about.tl.1.title")), desc: tg("d1", t("about.tl.1.desc")) },
+    { year: tg("y2", "2020"), title: tg("t2", t("about.tl.2.title")), desc: tg("d2", t("about.tl.2.desc")) },
+    { year: tg("y3", "2023"), title: tg("t3", t("about.tl.3.title")), desc: tg("d3", t("about.tl.3.desc")) },
+    { year: tg("y4", "2026"), title: tg("t4", t("about.tl.4.title")), desc: tg("d4", t("about.tl.4.desc")) },
   ];
-  const skills = [t("about.skill.1"), t("about.skill.2"), t("about.skill.3"), t("about.skill.4")];
+  const skills = [
+    g("skill_1", t("about.skill.1")),
+    g("skill_2", t("about.skill.2")),
+    g("skill_3", t("about.skill.3")),
+    g("skill_4", t("about.skill.4")),
+  ];
 
   return (
     <section id="about" className="section-pad relative">
       <div className="container-px mx-auto max-w-7xl grid lg:grid-cols-2 gap-20">
         <Reveal>
-          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{t("about.kicker")}</div>
-          <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.05] text-gradient">{t("about.title")}</h2>
-          <p className="mt-8 text-lg text-muted-foreground leading-relaxed max-w-xl">{t("about.body")}</p>
+          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{g("kicker", t("about.kicker"))}</div>
+          <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.05] text-gradient">{g("title", t("about.title"))}</h2>
+          <p className="mt-8 text-lg text-muted-foreground leading-relaxed max-w-xl">{g("body", t("about.body"))}</p>
           <div className="mt-10 grid grid-cols-2 gap-4 max-w-md">
             {skills.map((s) => (
               <div key={s} className="glass rounded-2xl px-4 py-3 text-sm flex items-center gap-2">
@@ -148,12 +163,12 @@ export function About() {
         <div className="relative">
           <div className="absolute left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-electric via-border to-transparent" />
           <ul className="space-y-10">
-            {timeline.map((tl, i) => (
-              <Reveal key={tl.year} delay={i * 120} as="li" className="relative pl-10">
+            {timeline.map((tlx, i) => (
+              <Reveal key={tlx.year + i} delay={i * 120} as="li" className="relative pl-10">
                 <div className="absolute left-0 top-1.5 h-4 w-4 rounded-full bg-electric shadow-[0_0_20px_var(--electric)]" />
-                <div className="text-xs text-electric font-mono">{tl.year}</div>
-                <div className="font-display text-xl mt-1">{tl.title}</div>
-                <div className="text-muted-foreground mt-1">{tl.desc}</div>
+                <div className="text-xs text-electric font-mono">{tlx.year}</div>
+                <div className="font-display text-xl mt-1">{tlx.title}</div>
+                <div className="text-muted-foreground mt-1">{tlx.desc}</div>
               </Reveal>
             ))}
           </ul>
@@ -164,38 +179,57 @@ export function About() {
 }
 
 /* -------------------- SERVICES -------------------- */
+const FALLBACK_SERVICE_ICONS = [Compass, Layers, Rocket, LineChart];
+function getIconComponent(name: string, fallback: React.ComponentType<any>) {
+  const Icon = (LucideIcons as any)[name];
+  return (Icon as React.ComponentType<any>) ?? fallback;
+}
+
 export function Services() {
   const { t } = useI18n();
-  const services = [
-    { icon: Compass, title: t("services.1.title"), desc: t("services.1.desc"), price: t("services.1.price") },
-    { icon: Layers, title: t("services.2.title"), desc: t("services.2.desc"), price: t("services.2.price") },
-    { icon: Rocket, title: t("services.3.title"), desc: t("services.3.desc"), price: t("services.3.price") },
-    { icon: LineChart, title: t("services.4.title"), desc: t("services.4.desc"), price: t("services.4.price") },
+  const locale = useLocale();
+  const intro = usePageSection("services", "intro");
+  const dbServices = useServicesItems();
+  const g = (k: string, fb: string) => (intro[k] && intro[k].trim() ? intro[k] : fb);
+
+  const fallback = [
+    { icon: "Compass", title_uk: t("services.1.title"), title_en: t("services.1.title"), desc_uk: t("services.1.desc"), desc_en: t("services.1.desc"), price_uk: t("services.1.price"), price_en: t("services.1.price") },
+    { icon: "Layers", title_uk: t("services.2.title"), title_en: t("services.2.title"), desc_uk: t("services.2.desc"), desc_en: t("services.2.desc"), price_uk: t("services.2.price"), price_en: t("services.2.price") },
+    { icon: "Rocket", title_uk: t("services.3.title"), title_en: t("services.3.title"), desc_uk: t("services.3.desc"), desc_en: t("services.3.desc"), price_uk: t("services.3.price"), price_en: t("services.3.price") },
+    { icon: "LineChart", title_uk: t("services.4.title"), title_en: t("services.4.title"), desc_uk: t("services.4.desc"), desc_en: t("services.4.desc"), price_uk: t("services.4.price"), price_en: t("services.4.price") },
   ];
+  const source = dbServices.length > 0 ? dbServices : fallback;
+  const services = source.map((s, i) => ({
+    Icon: getIconComponent(s.icon, FALLBACK_SERVICE_ICONS[i % 4]),
+    title: locale === "uk" ? s.title_uk : s.title_en,
+    desc: locale === "uk" ? s.desc_uk : s.desc_en,
+    price: locale === "uk" ? s.price_uk : s.price_en,
+  }));
+
   return (
     <section id="services" className="section-pad relative">
       <div className="container-px mx-auto max-w-7xl">
         <Reveal>
-          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{t("services.kicker")}</div>
-          <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.05] max-w-3xl text-gradient">{t("services.title")}</h2>
+          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{g("kicker", t("services.kicker"))}</div>
+          <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.05] max-w-3xl text-gradient">{g("title", t("services.title"))}</h2>
         </Reveal>
 
         <div className="mt-16 grid md:grid-cols-2 gap-6">
           {services.map((s, i) => (
-            <Reveal key={s.title} delay={i * 100}>
+            <Reveal key={s.title + i} delay={i * 100}>
               <div className="group glass rounded-3xl p-8 h-full hover:-translate-y-1 transition-all duration-500 hover:shadow-elegant relative overflow-hidden">
                 <div className="absolute inset-0 bg-[var(--gradient-radial)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-0" />
                 <div className="relative z-10">
                   <div className="flex items-start justify-between">
                     <div className="h-12 w-12 rounded-2xl glass flex items-center justify-center">
-                      <s.icon className="h-5 w-5 text-electric" />
+                      <s.Icon className="h-5 w-5 text-electric" />
                     </div>
                     <span className="text-xs text-muted-foreground font-mono">{s.price}</span>
                   </div>
                   <h3 className="mt-8 font-display text-2xl">{s.title}</h3>
                   <p className="mt-3 text-muted-foreground leading-relaxed">{s.desc}</p>
                   <a href="/contact" className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium group-hover:text-electric transition-colors">
-                    {t("services.cta")} <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    {g("cta", t("services.cta"))} <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </a>
                 </div>
               </div>
@@ -497,33 +531,49 @@ export function Achievements() {
 /* -------------------- TESTIMONIALS -------------------- */
 export function Testimonials() {
   const { t } = useI18n();
-  const quotes = [
-    { name: "Elena Marchetti", role: "CEO, Northwind Capital", text: t("tst.1") },
-    { name: "James Okafor", role: "Founder, Lumen Labs", text: t("tst.2") },
-    { name: "Sofia Hartmann", role: "CMO, Halo Audio", text: t("tst.3") },
+  const locale = useLocale();
+  const intro = usePageSection("testimonials", "intro");
+  const dbItems = useTestimonials();
+  const g = (k: string, fb: string) => (intro[k] && intro[k].trim() ? intro[k] : fb);
+  const fallback = [
+    { name: "Elena Marchetti", role_uk: "CEO, Northwind Capital", role_en: "CEO, Northwind Capital", text_uk: t("tst.1"), text_en: t("tst.1"), rating: 5, avatar_url: null as string | null },
+    { name: "James Okafor", role_uk: "Founder, Lumen Labs", role_en: "Founder, Lumen Labs", text_uk: t("tst.2"), text_en: t("tst.2"), rating: 5, avatar_url: null as string | null },
+    { name: "Sofia Hartmann", role_uk: "CMO, Halo Audio", role_en: "CMO, Halo Audio", text_uk: t("tst.3"), text_en: t("tst.3"), rating: 5, avatar_url: null as string | null },
   ];
+  const source = dbItems.length > 0 ? dbItems : fallback;
+  const quotes = source.map((q) => ({
+    name: q.name,
+    role: locale === "uk" ? q.role_uk : q.role_en,
+    text: locale === "uk" ? q.text_uk : q.text_en,
+    rating: q.rating,
+    avatar: q.avatar_url,
+  }));
   return (
     <section id="testimonials" className="section-pad relative">
       <div className="container-px mx-auto max-w-7xl">
         <Reveal>
-          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{t("tst.kicker")}</div>
-          <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.05] max-w-3xl text-gradient">{t("tst.title")}</h2>
+          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{g("kicker", t("tst.kicker"))}</div>
+          <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.05] max-w-3xl text-gradient">{g("title", t("tst.title"))}</h2>
         </Reveal>
 
         <div className="mt-14 grid md:grid-cols-3 gap-5">
           {quotes.map((q, i) => (
-            <Reveal key={q.name} delay={i * 120}>
+            <Reveal key={q.name + i} delay={i * 120}>
               <figure className="glass rounded-3xl p-8 h-full flex flex-col">
                 <div className="flex gap-1">
-                  {[...Array(5)].map((_, k) => (
+                  {[...Array(Math.max(1, Math.min(5, q.rating)))].map((_, k) => (
                     <Star key={k} className="h-4 w-4 fill-electric text-electric" />
                   ))}
                 </div>
                 <blockquote className="mt-6 text-lg leading-relaxed text-foreground/90">"{q.text}"</blockquote>
                 <figcaption className="mt-8 flex items-center gap-3 pt-6 border-t">
-                  <div className="h-10 w-10 rounded-full bg-gradient-to-br from-electric to-blue-700 flex items-center justify-center text-white text-sm font-medium">
-                    {q.name.charAt(0)}
-                  </div>
+                  {q.avatar ? (
+                    <img src={q.avatar} alt={q.name} className="h-10 w-10 rounded-full object-cover" />
+                  ) : (
+                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-electric to-blue-700 flex items-center justify-center text-white text-sm font-medium">
+                      {q.name.charAt(0)}
+                    </div>
+                  )}
                   <div>
                     <div className="text-sm font-medium">{q.name}</div>
                     <div className="text-xs text-muted-foreground">{q.role}</div>
@@ -541,27 +591,37 @@ export function Testimonials() {
 /* -------------------- FAQ -------------------- */
 export function FAQ() {
   const { t } = useI18n();
+  const locale = useLocale();
+  const intro = usePageSection("faq", "intro");
+  const dbItems = useFaqItems();
+  const g = (k: string, fb: string) => (intro[k] && intro[k].trim() ? intro[k] : fb);
   const [open, setOpen] = useState<number | null>(0);
-  const faqs = [
+  const fallback = [
     { q: t("faq.1.q"), a: t("faq.1.a") },
     { q: t("faq.2.q"), a: t("faq.2.a") },
     { q: t("faq.3.q"), a: t("faq.3.a") },
     { q: t("faq.4.q"), a: t("faq.4.a") },
     { q: t("faq.5.q"), a: t("faq.5.a") },
   ];
+  const faqs = dbItems.length > 0
+    ? dbItems.map((it) => ({
+        q: locale === "uk" ? it.question_uk : it.question_en,
+        a: locale === "uk" ? it.answer_uk : it.answer_en,
+      }))
+    : fallback;
   return (
     <section id="faq" className="section-pad relative">
       <div className="container-px mx-auto max-w-4xl">
         <Reveal>
-          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6 text-center">{t("faq.kicker")}</div>
-          <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4.5vw,3.5rem)] leading-[1.05] text-center text-gradient">{t("faq.title")}</h2>
+          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6 text-center">{g("kicker", t("faq.kicker"))}</div>
+          <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4.5vw,3.5rem)] leading-[1.05] text-center text-gradient">{g("title", t("faq.title"))}</h2>
         </Reveal>
 
         <div className="mt-14 space-y-3">
           {faqs.map((f, i) => {
             const isOpen = open === i;
             return (
-              <Reveal key={f.q} delay={i * 60}>
+              <Reveal key={f.q + i} delay={i * 60}>
                 <div className="glass rounded-2xl overflow-hidden">
                   <button onClick={() => setOpen(isOpen ? null : i)} className="w-full flex items-center justify-between gap-6 px-6 py-5 text-left">
                     <span className="font-display text-lg">{f.q}</span>
@@ -585,6 +645,10 @@ export function FAQ() {
 /* -------------------- CONTACT -------------------- */
 export function Contact() {
   const { t } = useI18n();
+  const intro = usePageSection("contact", "intro");
+  const quick = usePageSection("contact", "quick");
+  const g = (k: string, fb: string) => (intro[k] && intro[k].trim() ? intro[k] : fb);
+  const gq = (k: string, fb: string) => (quick[k] && quick[k].trim() ? quick[k] : fb);
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -626,6 +690,8 @@ export function Contact() {
         { name: "Instagram", href: "https://instagram.com/", Icon: Instagram },
       ];
 
+  const telegramUrl = gq("telegram_url", "https://t.me/");
+  const instagramUrl = gq("instagram_url", "https://instagram.com/");
 
   return (
     <section id="contact" className="section-pad relative">
@@ -634,11 +700,10 @@ export function Contact() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 relative">
             <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-electric/10 blur-[140px] pointer-events-none" />
 
-            {/* LEFT: form */}
             <div className="relative">
-              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{t("contact.kicker")}</div>
-              <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4vw,3.25rem)] leading-[1.05] text-gradient">{t("contact.title")}</h2>
-              <p className="mt-4 text-muted-foreground leading-relaxed">{t("contact.body")}</p>
+              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{g("kicker", t("contact.kicker"))}</div>
+              <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4vw,3.25rem)] leading-[1.05] text-gradient">{g("title", t("contact.title"))}</h2>
+              <p className="mt-4 text-muted-foreground leading-relaxed">{g("body", t("contact.body"))}</p>
 
               {sent ? (
                 <div className="mt-10 glass rounded-2xl p-8 flex flex-col items-center text-center animate-[blur-in_0.8s_ease-out]">
@@ -664,18 +729,12 @@ export function Contact() {
               )}
             </div>
 
-            {/* RIGHT: socials */}
             <div className="relative">
-              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{t("contact.socials")}</div>
+              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{g("socials_kicker", t("contact.socials"))}</div>
               <div className="grid grid-cols-2 gap-3">
                 {socials.map(({ name, href, Icon }) => (
-                  <a
-                    key={name}
-                    href={href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="glass rounded-2xl px-5 py-5 flex items-center gap-3 hover:scale-[1.02] hover:border-electric/40 transition-all group"
-                  >
+                  <a key={name} href={href} target="_blank" rel="noreferrer"
+                    className="glass rounded-2xl px-5 py-5 flex items-center gap-3 hover:scale-[1.02] hover:border-electric/40 transition-all group">
                     <Icon className="h-5 w-5 text-electric group-hover:scale-110 transition-transform" />
                     <span className="text-sm font-medium">{name}</span>
                   </a>
@@ -685,14 +744,14 @@ export function Contact() {
               <div className="mt-3 glass rounded-2xl px-5 py-5">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
                   <MessageCircle className="h-4 w-4 text-electric" />
-                  <span>{t("contact.quick")}</span>
+                  <span>{gq("label", t("contact.quick"))}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <a href="https://t.me/" target="_blank" rel="noreferrer"
+                  <a href={telegramUrl} target="_blank" rel="noreferrer"
                      className="rounded-full bg-foreground text-background px-5 py-2 text-sm font-medium hover:opacity-90 transition-opacity">
                     Telegram
                   </a>
-                  <a href="https://instagram.com/" target="_blank" rel="noreferrer"
+                  <a href={instagramUrl} target="_blank" rel="noreferrer"
                      className="rounded-full border border-border px-5 py-2 text-sm font-medium hover:border-electric/60 hover:text-foreground transition-colors">
                     Instagram
                   </a>
