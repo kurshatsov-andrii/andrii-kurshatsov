@@ -645,6 +645,10 @@ export function FAQ() {
 /* -------------------- CONTACT -------------------- */
 export function Contact() {
   const { t } = useI18n();
+  const intro = usePageSection("contact", "intro");
+  const quick = usePageSection("contact", "quick");
+  const g = (k: string, fb: string) => (intro[k] && intro[k].trim() ? intro[k] : fb);
+  const gq = (k: string, fb: string) => (quick[k] && quick[k].trim() ? quick[k] : fb);
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -686,6 +690,8 @@ export function Contact() {
         { name: "Instagram", href: "https://instagram.com/", Icon: Instagram },
       ];
 
+  const telegramUrl = gq("telegram_url", "https://t.me/");
+  const instagramUrl = gq("instagram_url", "https://instagram.com/");
 
   return (
     <section id="contact" className="section-pad relative">
@@ -694,11 +700,10 @@ export function Contact() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 relative">
             <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-electric/10 blur-[140px] pointer-events-none" />
 
-            {/* LEFT: form */}
             <div className="relative">
-              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{t("contact.kicker")}</div>
-              <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4vw,3.25rem)] leading-[1.05] text-gradient">{t("contact.title")}</h2>
-              <p className="mt-4 text-muted-foreground leading-relaxed">{t("contact.body")}</p>
+              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{g("kicker", t("contact.kicker"))}</div>
+              <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4vw,3.25rem)] leading-[1.05] text-gradient">{g("title", t("contact.title"))}</h2>
+              <p className="mt-4 text-muted-foreground leading-relaxed">{g("body", t("contact.body"))}</p>
 
               {sent ? (
                 <div className="mt-10 glass rounded-2xl p-8 flex flex-col items-center text-center animate-[blur-in_0.8s_ease-out]">
@@ -724,18 +729,12 @@ export function Contact() {
               )}
             </div>
 
-            {/* RIGHT: socials */}
             <div className="relative">
-              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{t("contact.socials")}</div>
+              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{g("socials_kicker", t("contact.socials"))}</div>
               <div className="grid grid-cols-2 gap-3">
                 {socials.map(({ name, href, Icon }) => (
-                  <a
-                    key={name}
-                    href={href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="glass rounded-2xl px-5 py-5 flex items-center gap-3 hover:scale-[1.02] hover:border-electric/40 transition-all group"
-                  >
+                  <a key={name} href={href} target="_blank" rel="noreferrer"
+                    className="glass rounded-2xl px-5 py-5 flex items-center gap-3 hover:scale-[1.02] hover:border-electric/40 transition-all group">
                     <Icon className="h-5 w-5 text-electric group-hover:scale-110 transition-transform" />
                     <span className="text-sm font-medium">{name}</span>
                   </a>
@@ -745,14 +744,14 @@ export function Contact() {
               <div className="mt-3 glass rounded-2xl px-5 py-5">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
                   <MessageCircle className="h-4 w-4 text-electric" />
-                  <span>{t("contact.quick")}</span>
+                  <span>{gq("label", t("contact.quick"))}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <a href="https://t.me/" target="_blank" rel="noreferrer"
+                  <a href={telegramUrl} target="_blank" rel="noreferrer"
                      className="rounded-full bg-foreground text-background px-5 py-2 text-sm font-medium hover:opacity-90 transition-opacity">
                     Telegram
                   </a>
-                  <a href="https://instagram.com/" target="_blank" rel="noreferrer"
+                  <a href={instagramUrl} target="_blank" rel="noreferrer"
                      className="rounded-full border border-border px-5 py-2 text-sm font-medium hover:border-electric/60 hover:text-foreground transition-colors">
                     Instagram
                   </a>
