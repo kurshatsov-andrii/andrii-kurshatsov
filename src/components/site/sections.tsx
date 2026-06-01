@@ -127,21 +127,30 @@ export function Hero() {
 /* -------------------- ABOUT -------------------- */
 export function About() {
   const { t } = useI18n();
+  const m = usePageSection("about", "main");
+  const tl = usePageSection("about", "timeline");
+  const g = (k: string, fb: string) => (m[k] && m[k].trim() ? m[k] : fb);
+  const tg = (k: string, fb: string) => (tl[k] && tl[k].trim() ? tl[k] : fb);
   const timeline = [
-    { year: "2017", title: t("about.tl.1.title"), desc: t("about.tl.1.desc") },
-    { year: "2020", title: t("about.tl.2.title"), desc: t("about.tl.2.desc") },
-    { year: "2023", title: t("about.tl.3.title"), desc: t("about.tl.3.desc") },
-    { year: "2026", title: t("about.tl.4.title"), desc: t("about.tl.4.desc") },
+    { year: tg("y1", "2017"), title: tg("t1", t("about.tl.1.title")), desc: tg("d1", t("about.tl.1.desc")) },
+    { year: tg("y2", "2020"), title: tg("t2", t("about.tl.2.title")), desc: tg("d2", t("about.tl.2.desc")) },
+    { year: tg("y3", "2023"), title: tg("t3", t("about.tl.3.title")), desc: tg("d3", t("about.tl.3.desc")) },
+    { year: tg("y4", "2026"), title: tg("t4", t("about.tl.4.title")), desc: tg("d4", t("about.tl.4.desc")) },
   ];
-  const skills = [t("about.skill.1"), t("about.skill.2"), t("about.skill.3"), t("about.skill.4")];
+  const skills = [
+    g("skill_1", t("about.skill.1")),
+    g("skill_2", t("about.skill.2")),
+    g("skill_3", t("about.skill.3")),
+    g("skill_4", t("about.skill.4")),
+  ];
 
   return (
     <section id="about" className="section-pad relative">
       <div className="container-px mx-auto max-w-7xl grid lg:grid-cols-2 gap-20">
         <Reveal>
-          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{t("about.kicker")}</div>
-          <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.05] text-gradient">{t("about.title")}</h2>
-          <p className="mt-8 text-lg text-muted-foreground leading-relaxed max-w-xl">{t("about.body")}</p>
+          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{g("kicker", t("about.kicker"))}</div>
+          <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.05] text-gradient">{g("title", t("about.title"))}</h2>
+          <p className="mt-8 text-lg text-muted-foreground leading-relaxed max-w-xl">{g("body", t("about.body"))}</p>
           <div className="mt-10 grid grid-cols-2 gap-4 max-w-md">
             {skills.map((s) => (
               <div key={s} className="glass rounded-2xl px-4 py-3 text-sm flex items-center gap-2">
@@ -154,12 +163,12 @@ export function About() {
         <div className="relative">
           <div className="absolute left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-electric via-border to-transparent" />
           <ul className="space-y-10">
-            {timeline.map((tl, i) => (
-              <Reveal key={tl.year} delay={i * 120} as="li" className="relative pl-10">
+            {timeline.map((tlx, i) => (
+              <Reveal key={tlx.year + i} delay={i * 120} as="li" className="relative pl-10">
                 <div className="absolute left-0 top-1.5 h-4 w-4 rounded-full bg-electric shadow-[0_0_20px_var(--electric)]" />
-                <div className="text-xs text-electric font-mono">{tl.year}</div>
-                <div className="font-display text-xl mt-1">{tl.title}</div>
-                <div className="text-muted-foreground mt-1">{tl.desc}</div>
+                <div className="text-xs text-electric font-mono">{tlx.year}</div>
+                <div className="font-display text-xl mt-1">{tlx.title}</div>
+                <div className="text-muted-foreground mt-1">{tlx.desc}</div>
               </Reveal>
             ))}
           </ul>
@@ -170,38 +179,57 @@ export function About() {
 }
 
 /* -------------------- SERVICES -------------------- */
+const FALLBACK_SERVICE_ICONS = [Compass, Layers, Rocket, LineChart];
+function getIconComponent(name: string, fallback: React.ComponentType<any>) {
+  const Icon = (LucideIcons as any)[name];
+  return (Icon as React.ComponentType<any>) ?? fallback;
+}
+
 export function Services() {
   const { t } = useI18n();
-  const services = [
-    { icon: Compass, title: t("services.1.title"), desc: t("services.1.desc"), price: t("services.1.price") },
-    { icon: Layers, title: t("services.2.title"), desc: t("services.2.desc"), price: t("services.2.price") },
-    { icon: Rocket, title: t("services.3.title"), desc: t("services.3.desc"), price: t("services.3.price") },
-    { icon: LineChart, title: t("services.4.title"), desc: t("services.4.desc"), price: t("services.4.price") },
+  const locale = useLocale();
+  const intro = usePageSection("services", "intro");
+  const dbServices = useServicesItems();
+  const g = (k: string, fb: string) => (intro[k] && intro[k].trim() ? intro[k] : fb);
+
+  const fallback = [
+    { icon: "Compass", title_uk: t("services.1.title"), title_en: t("services.1.title"), desc_uk: t("services.1.desc"), desc_en: t("services.1.desc"), price_uk: t("services.1.price"), price_en: t("services.1.price") },
+    { icon: "Layers", title_uk: t("services.2.title"), title_en: t("services.2.title"), desc_uk: t("services.2.desc"), desc_en: t("services.2.desc"), price_uk: t("services.2.price"), price_en: t("services.2.price") },
+    { icon: "Rocket", title_uk: t("services.3.title"), title_en: t("services.3.title"), desc_uk: t("services.3.desc"), desc_en: t("services.3.desc"), price_uk: t("services.3.price"), price_en: t("services.3.price") },
+    { icon: "LineChart", title_uk: t("services.4.title"), title_en: t("services.4.title"), desc_uk: t("services.4.desc"), desc_en: t("services.4.desc"), price_uk: t("services.4.price"), price_en: t("services.4.price") },
   ];
+  const source = dbServices.length > 0 ? dbServices : fallback;
+  const services = source.map((s, i) => ({
+    Icon: getIconComponent(s.icon, FALLBACK_SERVICE_ICONS[i % 4]),
+    title: locale === "uk" ? s.title_uk : s.title_en,
+    desc: locale === "uk" ? s.desc_uk : s.desc_en,
+    price: locale === "uk" ? s.price_uk : s.price_en,
+  }));
+
   return (
     <section id="services" className="section-pad relative">
       <div className="container-px mx-auto max-w-7xl">
         <Reveal>
-          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{t("services.kicker")}</div>
-          <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.05] max-w-3xl text-gradient">{t("services.title")}</h2>
+          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">{g("kicker", t("services.kicker"))}</div>
+          <h2 className="font-display font-semibold tracking-tighter text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.05] max-w-3xl text-gradient">{g("title", t("services.title"))}</h2>
         </Reveal>
 
         <div className="mt-16 grid md:grid-cols-2 gap-6">
           {services.map((s, i) => (
-            <Reveal key={s.title} delay={i * 100}>
+            <Reveal key={s.title + i} delay={i * 100}>
               <div className="group glass rounded-3xl p-8 h-full hover:-translate-y-1 transition-all duration-500 hover:shadow-elegant relative overflow-hidden">
                 <div className="absolute inset-0 bg-[var(--gradient-radial)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-0" />
                 <div className="relative z-10">
                   <div className="flex items-start justify-between">
                     <div className="h-12 w-12 rounded-2xl glass flex items-center justify-center">
-                      <s.icon className="h-5 w-5 text-electric" />
+                      <s.Icon className="h-5 w-5 text-electric" />
                     </div>
                     <span className="text-xs text-muted-foreground font-mono">{s.price}</span>
                   </div>
                   <h3 className="mt-8 font-display text-2xl">{s.title}</h3>
                   <p className="mt-3 text-muted-foreground leading-relaxed">{s.desc}</p>
                   <a href="/contact" className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium group-hover:text-electric transition-colors">
-                    {t("services.cta")} <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    {g("cta", t("services.cta"))} <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </a>
                 </div>
               </div>
