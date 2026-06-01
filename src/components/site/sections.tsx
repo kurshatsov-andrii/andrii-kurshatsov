@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import * as LucideIcons from "lucide-react";
 import {
   ArrowUpRight, Sparkles, LineChart, Rocket, Layers, Compass, Send,
   Mail, ChevronDown, Star, Check, MessageCircle, Github, Linkedin, Twitter,
@@ -14,6 +15,7 @@ import { sendTelegram } from "@/lib/telegram.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { PORTFOLIO_CATEGORIES, type PortfolioRow } from "@/lib/portfolio";
 import { MediaModal } from "./MediaModal";
+import { usePageSection, useFaqItems, useTestimonials, useServicesItems, useLocale } from "@/lib/usePageData";
 
 function useAboutPhoto() {
   const [url, setUrl] = useState<string | null>(null);
