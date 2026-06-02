@@ -1,0 +1,13 @@
+# Andrii Kurshatsov
+
+> Brand & product strategist and premium product designer partnering with founders to launch category-defining digital products. Bilingual site (Ukrainian / English).
+
+## Pages
+
+- [Home](/): Overview of services, selected work, testimonials and contact.
+- [About](/about): Background, approach and skills.
+- [Services](/services): Brand strategy, product design and launch partnerships.
+- [Work](/work): Selected case studies and product launches.
+- [Testimonials](/testimonials): What founders say about working with Andrii.
+- [FAQ](/faq): Common questions about engagements, scope and process.
+- [Contact](/contact): Telegram, Instagram and contact form.
