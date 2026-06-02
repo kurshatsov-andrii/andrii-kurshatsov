@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { lovable } from "@/integrations/lovable";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth, ADMIN_EMAIL } from "@/lib/useAuth";
-import { LogOut, LayoutGrid, FileText, Share2, User as UserIcon, Sparkles, Star, HelpCircle } from "lucide-react";
+import { LogOut, LayoutGrid, FileText, Share2, User as UserIcon, Sparkles, Star, HelpCircle, Search } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   component: AdminLayout,
@@ -55,6 +55,7 @@ function AdminLayout() {
   const tabs = [
     { to: "/admin", label: "Портфоліо", icon: LayoutGrid, exact: true },
     { to: "/admin/pages", label: "Сторінки", icon: FileText },
+    { to: "/admin/seo", label: "SEO", icon: Search },
     { to: "/admin/services", label: "Послуги", icon: Sparkles },
     { to: "/admin/testimonials", label: "Відгуки", icon: Star },
     { to: "/admin/faq", label: "FAQ", icon: HelpCircle },

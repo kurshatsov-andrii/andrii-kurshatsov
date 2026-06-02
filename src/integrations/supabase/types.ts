@@ -128,6 +128,33 @@ export type Database = {
         }
         Relationships: []
       }
+      seo_meta: {
+        Row: {
+          description: string
+          id: string
+          locale: string
+          page: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          description?: string
+          id?: string
+          locale: string
+          page: string
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          description?: string
+          id?: string
+          locale?: string
+          page?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       services_items: {
         Row: {
           created_at: string

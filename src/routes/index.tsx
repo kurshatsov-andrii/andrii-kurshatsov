@@ -3,6 +3,7 @@ import {
   Hero, About, Services, Portfolio, Achievements,
   Testimonials, FAQ, Contact,
 } from "@/components/site/sections";
+import { useSeo } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -31,6 +32,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  useSeo("home");
   return (
     <>
       <Hero />
