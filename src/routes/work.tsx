@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Portfolio, Achievements } from "@/components/site/sections";
+import { useSeo } from "@/lib/seo";
 
 export const Route = createFileRoute("/work")({
   component: WorkPage,
@@ -15,6 +16,7 @@ export const Route = createFileRoute("/work")({
 });
 
 function WorkPage() {
+  useSeo("work");
   return (
     <div className="pt-32">
       <Portfolio />

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { About } from "@/components/site/sections";
+import { useSeo } from "@/lib/seo";
 
 export const Route = createFileRoute("/about")({
   component: AboutPage,
@@ -15,6 +16,7 @@ export const Route = createFileRoute("/about")({
 });
 
 function AboutPage() {
+  useSeo("about");
   return (
     <div className="pt-32">
       <About />
