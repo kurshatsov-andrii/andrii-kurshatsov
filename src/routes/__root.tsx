@@ -87,6 +87,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:description", content: "Створюю преміальні цифрові продукти, бренди та сучасні web-рішення для підприємців, які хочуть виділятися та масштабуватись." },
       { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/LWuY3eS3ECYKUik6omJBvAey1u52/social-images/social-1779905321747-favicon.webp" },
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/LWuY3eS3ECYKUik6omJBvAey1u52/social-images/social-1779905321747-favicon.webp" },
+      { name: "google-site-verification", content: "gXszg1ATfXhMMjaKjeg0pCNEG-okxTZ-vlzA2N2IF_4" },
     ],
     links: [
       {
