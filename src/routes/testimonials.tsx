@@ -1,18 +1,26 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Testimonials } from "@/components/site/sections";
 import { useSeo } from "@/lib/seo";
+import { getSeoForPage } from "@/lib/seo.functions";
 
 export const Route = createFileRoute("/testimonials")({
   component: TestimonialsPage,
-  head: () => ({
-    meta: [
-      { title: "Clients — Andrii Kurshatsov" },
-      { name: "description", content: "What founders and operators say about working with Andrii Kurshatsov." },
-      { property: "og:title", content: "Clients — Andrii Kurshatsov" },
-      { property: "og:description", content: "Testimonials from founders and operators." },
-    ],
-    links: [{ rel: "canonical", href: "/testimonials" }],
-  }),
+  loader: () => getSeoForPage({ data: { page: "testimonials" } }),
+  head: ({ loaderData }) => {
+    const title = loaderData?.title || "Clients — Andrii Kurshatsov";
+    const description = loaderData?.description || "Testimonials from founders and operators.";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+      ],
+      links: [{ rel: "canonical", href: "https://andrii-kurshatsov.lovable.app/testimonials" }],
+    };
+  },
 });
 
 function TestimonialsPage() {
