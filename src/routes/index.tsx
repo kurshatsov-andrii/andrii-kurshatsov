@@ -4,9 +4,11 @@ import {
   Testimonials, FAQ, Contact,
 } from "@/components/site/sections";
 import { useSeo } from "@/lib/seo";
+import { getSeoForPage } from "@/lib/seo.functions";
 
 export const Route = createFileRoute("/")({
   component: Index,
+  loader: () => getSeoForPage({ data: { page: "home" } }),
   head: () => ({
     meta: [
       { title: "Andrii Kurshatsov — Brand & Product Strategist for Founders" },
