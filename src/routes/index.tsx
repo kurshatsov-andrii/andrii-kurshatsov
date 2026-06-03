@@ -86,7 +86,8 @@ export const Route = createFileRoute("/")({
         }),
       },
     ],
-  }),
+  });
+  },
 });
 
 function Index() {
