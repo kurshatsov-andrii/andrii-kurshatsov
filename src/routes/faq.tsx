@@ -1,18 +1,26 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { FAQ } from "@/components/site/sections";
 import { useSeo } from "@/lib/seo";
+import { getSeoForPage } from "@/lib/seo.functions";
 
 export const Route = createFileRoute("/faq")({
   component: FaqPage,
-  head: () => ({
-    meta: [
-      { title: "FAQ — Andrii Kurshatsov" },
-      { name: "description", content: "Answers to the most common questions about working with Andrii Kurshatsov." },
-      { property: "og:title", content: "FAQ — Andrii Kurshatsov" },
-      { property: "og:description", content: "Common questions about engagements, scope, and process." },
-    ],
-    links: [{ rel: "canonical", href: "/faq" }],
-  }),
+  loader: () => getSeoForPage({ data: { page: "faq" } }),
+  head: ({ loaderData }) => {
+    const title = loaderData?.title || "FAQ — Andrii Kurshatsov";
+    const description = loaderData?.description || "Common questions about engagements, scope, and process.";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+      ],
+      links: [{ rel: "canonical", href: "https://andrii-kurshatsov.lovable.app/faq" }],
+    };
+  },
 });
 
 function FaqPage() {

@@ -1,18 +1,26 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Services } from "@/components/site/sections";
 import { useSeo } from "@/lib/seo";
+import { getSeoForPage } from "@/lib/seo.functions";
 
 export const Route = createFileRoute("/services")({
   component: ServicesPage,
-  head: () => ({
-    meta: [
-      { title: "Services — Andrii Kurshatsov" },
-      { name: "description", content: "Brand strategy, product design, and launch partnerships for ambitious founders and teams." },
-      { property: "og:title", content: "Services — Andrii Kurshatsov" },
-      { property: "og:description", content: "Brand strategy, product design, and launch partnerships." },
-    ],
-    links: [{ rel: "canonical", href: "/services" }],
-  }),
+  loader: () => getSeoForPage({ data: { page: "services" } }),
+  head: ({ loaderData }) => {
+    const title = loaderData?.title || "Services — Andrii Kurshatsov";
+    const description = loaderData?.description || "Brand strategy, product design, and launch partnerships.";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+      ],
+      links: [{ rel: "canonical", href: "https://andrii-kurshatsov.lovable.app/services" }],
+    };
+  },
 });
 
 function ServicesPage() {
