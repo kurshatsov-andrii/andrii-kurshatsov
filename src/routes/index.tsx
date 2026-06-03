@@ -12,7 +12,7 @@ export const Route = createFileRoute("/")({
   head: ({ loaderData }) => {
     const title = loaderData?.title || "Andrii Kurshatsov — Brand & Product Strategist for Founders";
     const description = loaderData?.description || "Premium brand strategy, product design and launch partnerships for founders building category-defining companies.";
-    return ({
+    return {
     meta: [
       { title },
       { name: "description", content: description },
@@ -86,7 +86,7 @@ export const Route = createFileRoute("/")({
         }),
       },
     ],
-  });
+    };
   },
 });
 
