@@ -9,14 +9,19 @@ import { getSeoForPage } from "@/lib/seo.functions";
 export const Route = createFileRoute("/")({
   component: Index,
   loader: () => getSeoForPage({ data: { page: "home" } }),
-  head: () => ({
+  head: ({ loaderData }) => {
+    const title = loaderData?.title || "Andrii Kurshatsov — Brand & Product Strategist for Founders";
+    const description = loaderData?.description || "Premium brand strategy, product design and launch partnerships for founders building category-defining companies.";
+    return ({
     meta: [
-      { title: "Andrii Kurshatsov — Brand & Product Strategist for Founders" },
-      { name: "description", content: "Premium brand strategy, product design and launch partnerships for founders building category-defining companies." },
-      { property: "og:title", content: "Andrii Kurshatsov — Brand & Product Strategist" },
-      { property: "og:description", content: "Premium brand and product design for founders building category-defining companies." },
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { name: "twitter:title", content: title },
+      { name: "twitter:description", content: description },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "/" },
+      { property: "og:url", content: "https://andrii-kurshatsov.lovable.app/" },
     ],
     links: [{ rel: "canonical", href: "https://andrii-kurshatsov.lovable.app/" }],
     scripts: [
