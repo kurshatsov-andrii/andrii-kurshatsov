@@ -6,6 +6,7 @@ import {
   Phone, Instagram, Music, Play, Globe, Youtube, Video,
 } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
+import { z } from "zod";
 import portrait from "@/assets/andrii-portrait.jpg";
 import heroBg from "@/assets/hero-bg.jpg";
 import { Reveal } from "./Reveal";
@@ -16,6 +17,33 @@ import { supabase } from "@/integrations/supabase/client";
 import { PORTFOLIO_CATEGORIES, type PortfolioRow } from "@/lib/portfolio";
 import { MediaModal } from "./MediaModal";
 import { usePageSection, useFaqItems, useTestimonials, useServicesItems, useLocale } from "@/lib/usePageData";
+
+type Lang = "ua" | "en";
+const msg = {
+  required: { ua: "Обовʼязкове поле", en: "This field is required" },
+  nameMin: { ua: "Мінімум 2 символи", en: "At least 2 characters" },
+  email: { ua: "Невірний email", en: "Invalid email" },
+  descMin: { ua: "Опишіть детальніше (мін. 10 символів)", en: "Please describe in more detail (min 10 chars)" },
+  msgMin: { ua: "Повідомлення занадто коротке (мін. 10 символів)", en: "Message is too short (min 10 chars)" },
+  contactMin: { ua: "Вкажіть контакт", en: "Please provide a contact" },
+};
+const tr = (k: keyof typeof msg, lang: Lang) => msg[k][lang === "ua" ? "ua" : "en"];
+
+function briefSchema(lang: Lang) {
+  return z.object({
+    desc: z.string().trim().min(10, tr("descMin", lang)).max(2000),
+    name: z.string().trim().min(2, tr("nameMin", lang)).max(100),
+    contact: z.string().trim().min(2, tr("contactMin", lang)).max(200),
+  });
+}
+
+function contactSchema(lang: Lang) {
+  return z.object({
+    name: z.string().trim().min(2, tr("nameMin", lang)).max(100),
+    email: z.string().trim().min(1, tr("required", lang)).email(tr("email", lang)).max(255),
+    message: z.string().trim().min(10, tr("msgMin", lang)).max(2000),
+  });
+}
 
 function useAboutPhoto() {
   const [url, setUrl] = useState<string | null>(null);
