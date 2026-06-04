@@ -690,7 +690,7 @@ export function FAQ() {
 
 /* -------------------- CONTACT -------------------- */
 export function Contact() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const intro = usePageSection("contact", "intro");
   const quick = usePageSection("contact", "quick");
   const g = (k: string, fb: string) => (intro[k] && intro[k].trim() ? intro[k] : fb);
@@ -699,30 +699,43 @@ export function Contact() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
   const send = useServerFn(sendTelegram);
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    const parsed = contactSchema(lang as Lang).safeParse(form);
+    if (!parsed.success) {
+      const fe: { name?: string; email?: string; message?: string } = {};
+      for (const issue of parsed.error.issues) {
+        const key = issue.path[0] as "name" | "email" | "message";
+        if (!fe[key]) fe[key] = issue.message;
+      }
+      setErrors(fe);
+      return;
+    }
+    setErrors({});
     setSending(true);
     try {
       await send({
         data: {
           type: "contact",
           fields: {
-            "Імʼя": form.name,
-            "Email": form.email,
-            "Повідомлення": form.message,
+            "Імʼя": parsed.data.name,
+            "Email": parsed.data.email,
+            "Повідомлення": parsed.data.message,
           },
         },
       });
       setSent(true);
     } catch (err) {
       console.error(err);
-      setError("Не вдалося надіслати. Спробуйте ще раз.");
+      setError(lang === "ua" ? "Не вдалося надіслати. Спробуйте ще раз." : "Failed to send. Please try again.");
     } finally {
       setSending(false);
     }
   };
+
 
   const dbSocials = useSocialLinks();
   const socials = dbSocials.length > 0
