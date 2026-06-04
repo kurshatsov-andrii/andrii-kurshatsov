@@ -19,6 +19,9 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as PortfolioSongsRouteImport } from './routes/portfolio.songs'
+import { Route as PortfolioClipsRouteImport } from './routes/portfolio.clips'
+import { Route as PortfolioAdsRouteImport } from './routes/portfolio.ads'
 import { Route as AdminTestimonialsRouteImport } from './routes/admin.testimonials'
 import { Route as AdminSocialsRouteImport } from './routes/admin.socials'
 import { Route as AdminServicesRouteImport } from './routes/admin.services'
@@ -77,6 +80,21 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const PortfolioSongsRoute = PortfolioSongsRouteImport.update({
+  id: '/portfolio/songs',
+  path: '/portfolio/songs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortfolioClipsRoute = PortfolioClipsRouteImport.update({
+  id: '/portfolio/clips',
+  path: '/portfolio/clips',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortfolioAdsRoute = PortfolioAdsRouteImport.update({
+  id: '/portfolio/ads',
+  path: '/portfolio/ads',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminTestimonialsRoute = AdminTestimonialsRouteImport.update({
   id: '/testimonials',
   path: '/testimonials',
@@ -130,6 +148,9 @@ export interface FileRoutesByFullPath {
   '/admin/services': typeof AdminServicesRoute
   '/admin/socials': typeof AdminSocialsRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
+  '/portfolio/ads': typeof PortfolioAdsRoute
+  '/portfolio/clips': typeof PortfolioClipsRoute
+  '/portfolio/songs': typeof PortfolioSongsRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -148,6 +169,9 @@ export interface FileRoutesByTo {
   '/admin/services': typeof AdminServicesRoute
   '/admin/socials': typeof AdminSocialsRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
+  '/portfolio/ads': typeof PortfolioAdsRoute
+  '/portfolio/clips': typeof PortfolioClipsRoute
+  '/portfolio/songs': typeof PortfolioSongsRoute
   '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
@@ -168,6 +192,9 @@ export interface FileRoutesById {
   '/admin/services': typeof AdminServicesRoute
   '/admin/socials': typeof AdminSocialsRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
+  '/portfolio/ads': typeof PortfolioAdsRoute
+  '/portfolio/clips': typeof PortfolioClipsRoute
+  '/portfolio/songs': typeof PortfolioSongsRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -189,6 +216,9 @@ export interface FileRouteTypes {
     | '/admin/services'
     | '/admin/socials'
     | '/admin/testimonials'
+    | '/portfolio/ads'
+    | '/portfolio/clips'
+    | '/portfolio/songs'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -207,6 +237,9 @@ export interface FileRouteTypes {
     | '/admin/services'
     | '/admin/socials'
     | '/admin/testimonials'
+    | '/portfolio/ads'
+    | '/portfolio/clips'
+    | '/portfolio/songs'
     | '/admin'
   id:
     | '__root__'
@@ -226,6 +259,9 @@ export interface FileRouteTypes {
     | '/admin/services'
     | '/admin/socials'
     | '/admin/testimonials'
+    | '/portfolio/ads'
+    | '/portfolio/clips'
+    | '/portfolio/songs'
     | '/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -239,6 +275,9 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TestimonialsRoute: typeof TestimonialsRoute
   WorkRoute: typeof WorkRoute
+  PortfolioAdsRoute: typeof PortfolioAdsRoute
+  PortfolioClipsRoute: typeof PortfolioClipsRoute
+  PortfolioSongsRoute: typeof PortfolioSongsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -312,6 +351,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/portfolio/songs': {
+      id: '/portfolio/songs'
+      path: '/portfolio/songs'
+      fullPath: '/portfolio/songs'
+      preLoaderRoute: typeof PortfolioSongsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portfolio/clips': {
+      id: '/portfolio/clips'
+      path: '/portfolio/clips'
+      fullPath: '/portfolio/clips'
+      preLoaderRoute: typeof PortfolioClipsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portfolio/ads': {
+      id: '/portfolio/ads'
+      path: '/portfolio/ads'
+      fullPath: '/portfolio/ads'
+      preLoaderRoute: typeof PortfolioAdsRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/testimonials': {
       id: '/admin/testimonials'
@@ -399,6 +459,9 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TestimonialsRoute: TestimonialsRoute,
   WorkRoute: WorkRoute,
+  PortfolioAdsRoute: PortfolioAdsRoute,
+  PortfolioClipsRoute: PortfolioClipsRoute,
+  PortfolioSongsRoute: PortfolioSongsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

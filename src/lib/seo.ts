@@ -11,6 +11,9 @@ export const SEO_PAGES: { key: string; label: string }[] = [
   { key: "about", label: "Про мене" },
   { key: "services", label: "Послуги" },
   { key: "work", label: "Портфоліо" },
+  { key: "portfolio_songs", label: "Портфоліо — ШІ-пісні" },
+  { key: "portfolio_ads", label: "Портфоліо — ШІ-реклама" },
+  { key: "portfolio_clips", label: "Портфоліо — ШІ-кліпи" },
   { key: "testimonials", label: "Відгуки" },
   { key: "faq", label: "FAQ" },
   { key: "contact", label: "Контакти" },
@@ -61,6 +64,36 @@ export const SEO_DEFAULTS: Record<string, Record<SeoLocale, SeoEntry>> = {
     en: {
       title: "Work — Andrii Kurshatsov",
       description: "Selected case studies, product launches and branding work by Andrii Kurshatsov.",
+    },
+  },
+  portfolio_songs: {
+    uk: {
+      title: "ШІ-пісні — Портфоліо Андрія Куршацова",
+      description: "Колекція AI-генерованих пісень: брендові треки, джингли та музичні експерименти від Андрія Куршацова.",
+    },
+    en: {
+      title: "AI Songs — Andrii Kurshatsov Portfolio",
+      description: "AI-generated songs, brand tracks and music experiments crafted by Andrii Kurshatsov.",
+    },
+  },
+  portfolio_ads: {
+    uk: {
+      title: "ШІ-реклама — Портфоліо Андрія Куршацова",
+      description: "Креативна AI-реклама для брендів: відео-кампанії, концепти та запуски під ключ.",
+    },
+    en: {
+      title: "AI Ads — Andrii Kurshatsov Portfolio",
+      description: "Creative AI ad campaigns for brands: video creatives, concepts and turn-key launches.",
+    },
+  },
+  portfolio_clips: {
+    uk: {
+      title: "ШІ-кліпи — Портфоліо Андрія Куршацова",
+      description: "Музичні AI-кліпи та короткі відео, створені на перетині мистецтва і технологій.",
+    },
+    en: {
+      title: "AI Clips — Andrii Kurshatsov Portfolio",
+      description: "AI music clips and short-form videos at the intersection of art and technology.",
     },
   },
   testimonials: {
