@@ -6,6 +6,7 @@ import {
   Phone, Instagram, Music, Play, Globe, Youtube, Video,
 } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
+import { z } from "zod";
 import portrait from "@/assets/andrii-portrait.jpg";
 import heroBg from "@/assets/hero-bg.jpg";
 import { Reveal } from "./Reveal";
@@ -16,6 +17,33 @@ import { supabase } from "@/integrations/supabase/client";
 import { PORTFOLIO_CATEGORIES, type PortfolioRow } from "@/lib/portfolio";
 import { MediaModal } from "./MediaModal";
 import { usePageSection, useFaqItems, useTestimonials, useServicesItems, useLocale } from "@/lib/usePageData";
+
+type Lang = "ua" | "en";
+const msg = {
+  required: { ua: "Обовʼязкове поле", en: "This field is required" },
+  nameMin: { ua: "Мінімум 2 символи", en: "At least 2 characters" },
+  email: { ua: "Невірний email", en: "Invalid email" },
+  descMin: { ua: "Опишіть детальніше (мін. 10 символів)", en: "Please describe in more detail (min 10 chars)" },
+  msgMin: { ua: "Повідомлення занадто коротке (мін. 10 символів)", en: "Message is too short (min 10 chars)" },
+  contactMin: { ua: "Вкажіть контакт", en: "Please provide a contact" },
+};
+const tr = (k: keyof typeof msg, lang: Lang) => msg[k][lang === "ua" ? "ua" : "en"];
+
+function briefSchema(lang: Lang) {
+  return z.object({
+    desc: z.string().trim().min(10, tr("descMin", lang)).max(2000),
+    name: z.string().trim().min(2, tr("nameMin", lang)).max(100),
+    contact: z.string().trim().min(2, tr("contactMin", lang)).max(200),
+  });
+}
+
+function contactSchema(lang: Lang) {
+  return z.object({
+    name: z.string().trim().min(2, tr("nameMin", lang)).max(100),
+    email: z.string().trim().min(1, tr("required", lang)).email(tr("email", lang)).max(255),
+    message: z.string().trim().min(10, tr("msgMin", lang)).max(2000),
+  });
+}
 
 function useAboutPhoto() {
   const [url, setUrl] = useState<string | null>(null);
@@ -247,7 +275,7 @@ export function Services() {
 
 /* -------------------- BRIEF FORM -------------------- */
 export function BriefForm() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const serviceOptions = [
     t("brief.svc.1"), t("brief.svc.2"), t("brief.svc.3"), t("brief.svc.4"),
   ];
@@ -264,11 +292,23 @@ export function BriefForm() {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<{ desc?: string; name?: string; contact?: string }>({});
   const send = useServerFn(sendTelegram);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    const parsed = briefSchema(lang as Lang).safeParse({ desc, name, contact });
+    if (!parsed.success) {
+      const fe: { desc?: string; name?: string; contact?: string } = {};
+      for (const issue of parsed.error.issues) {
+        const key = issue.path[0] as "desc" | "name" | "contact";
+        if (!fe[key]) fe[key] = issue.message;
+      }
+      setErrors(fe);
+      return;
+    }
+    setErrors({});
     setSending(true);
     try {
       await send({
@@ -276,10 +316,10 @@ export function BriefForm() {
           type: "brief",
           fields: {
             "Послуга": service,
-            "Опис": desc,
-            "Імʼя": name,
+            "Опис": parsed.data.desc,
+            "Імʼя": parsed.data.name,
             "Канал звʼязку": channel,
-            "Контакт": contact,
+            "Контакт": parsed.data.contact,
           },
         },
       });
@@ -288,7 +328,7 @@ export function BriefForm() {
       setDesc(""); setName(""); setContact("");
     } catch (err) {
       console.error(err);
-      setError("Не вдалося надіслати. Спробуйте ще раз.");
+      setError(lang === "ua" ? "Не вдалося надіслати. Спробуйте ще раз." : "Failed to send. Please try again.");
     } finally {
       setSending(false);
     }
@@ -296,7 +336,7 @@ export function BriefForm() {
 
   return (
     <Reveal>
-      <form onSubmit={onSubmit} className="glass rounded-[2rem] p-8 md:p-12 relative overflow-hidden">
+      <form onSubmit={onSubmit} noValidate className="glass rounded-[2rem] p-8 md:p-12 relative overflow-hidden">
         <div className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-5">{t("brief.kicker")}</div>
         <h3 className="font-display font-semibold tracking-tighter text-[clamp(1.75rem,3.5vw,2.75rem)] leading-[1.05] max-w-2xl">
           {t("brief.title")}
@@ -318,17 +358,21 @@ export function BriefForm() {
         </div>
 
         <div className="mt-8">
-          <label className="text-sm text-muted-foreground mb-3 block">{t("brief.desc")}</label>
-          <textarea value={desc} onChange={(e) => setDesc(e.target.value)} rows={5}
+          <label className="text-sm text-muted-foreground mb-3 block">{t("brief.desc")} *</label>
+          <textarea value={desc} onChange={(e) => setDesc(e.target.value)} rows={5} required maxLength={2000}
+            aria-invalid={!!errors.desc} aria-describedby={errors.desc ? "brief-desc-err" : undefined}
             placeholder={t("brief.desc.placeholder")}
-            className="w-full rounded-2xl glass border border-border bg-transparent px-5 py-4 text-base placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-electric/40 resize-none" />
+            className={`w-full rounded-2xl glass border bg-transparent px-5 py-4 text-base placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-electric/40 resize-none ${errors.desc ? "border-destructive" : "border-border"}`} />
+          {errors.desc && <p id="brief-desc-err" className="mt-2 text-xs text-destructive">{errors.desc}</p>}
         </div>
 
         <div className="mt-8 grid md:grid-cols-2 gap-6">
           <div>
-            <label className="text-sm text-muted-foreground mb-3 block">{t("brief.name")}</label>
-            <input value={name} onChange={(e) => setName(e.target.value)}
-              className="w-full h-12 rounded-2xl glass border border-border bg-transparent px-5 text-base focus:outline-none focus:ring-2 focus:ring-electric/40" />
+            <label className="text-sm text-muted-foreground mb-3 block">{t("brief.name")} *</label>
+            <input value={name} onChange={(e) => setName(e.target.value)} required maxLength={100}
+              aria-invalid={!!errors.name} aria-describedby={errors.name ? "brief-name-err" : undefined}
+              className={`w-full h-12 rounded-2xl glass border bg-transparent px-5 text-base focus:outline-none focus:ring-2 focus:ring-electric/40 ${errors.name ? "border-destructive" : "border-border"}`} />
+            {errors.name && <p id="brief-name-err" className="mt-2 text-xs text-destructive">{errors.name}</p>}
           </div>
           <div>
             <div className="text-sm text-muted-foreground mb-3">{t("brief.channel")}</div>
@@ -347,10 +391,12 @@ export function BriefForm() {
         </div>
 
         <div className="mt-8">
-          <label className="text-sm text-muted-foreground mb-3 block">{t("brief.contact")}</label>
+          <label className="text-sm text-muted-foreground mb-3 block">{t("brief.contact")} *</label>
           <input value={contact} onChange={(e) => setContact(e.target.value)}
-            placeholder={channel === "phone" ? "+380…" : "@username"} required
-            className="w-full h-12 rounded-2xl glass border border-border bg-transparent px-5 text-base placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-electric/40" />
+            placeholder={channel === "phone" ? "+380…" : "@username"} required maxLength={200}
+            aria-invalid={!!errors.contact} aria-describedby={errors.contact ? "brief-contact-err" : undefined}
+            className={`w-full h-12 rounded-2xl glass border bg-transparent px-5 text-base placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-electric/40 ${errors.contact ? "border-destructive" : "border-border"}`} />
+          {errors.contact && <p id="brief-contact-err" className="mt-2 text-xs text-destructive">{errors.contact}</p>}
         </div>
 
         <div className="mt-10 flex items-center gap-4 flex-wrap">
@@ -644,7 +690,7 @@ export function FAQ() {
 
 /* -------------------- CONTACT -------------------- */
 export function Contact() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const intro = usePageSection("contact", "intro");
   const quick = usePageSection("contact", "quick");
   const g = (k: string, fb: string) => (intro[k] && intro[k].trim() ? intro[k] : fb);
@@ -653,30 +699,43 @@ export function Contact() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
   const send = useServerFn(sendTelegram);
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    const parsed = contactSchema(lang as Lang).safeParse(form);
+    if (!parsed.success) {
+      const fe: { name?: string; email?: string; message?: string } = {};
+      for (const issue of parsed.error.issues) {
+        const key = issue.path[0] as "name" | "email" | "message";
+        if (!fe[key]) fe[key] = issue.message;
+      }
+      setErrors(fe);
+      return;
+    }
+    setErrors({});
     setSending(true);
     try {
       await send({
         data: {
           type: "contact",
           fields: {
-            "Імʼя": form.name,
-            "Email": form.email,
-            "Повідомлення": form.message,
+            "Імʼя": parsed.data.name,
+            "Email": parsed.data.email,
+            "Повідомлення": parsed.data.message,
           },
         },
       });
       setSent(true);
     } catch (err) {
       console.error(err);
-      setError("Не вдалося надіслати. Спробуйте ще раз.");
+      setError(lang === "ua" ? "Не вдалося надіслати. Спробуйте ще раз." : "Failed to send. Please try again.");
     } finally {
       setSending(false);
     }
   };
+
 
   const dbSocials = useSocialLinks();
   const socials = dbSocials.length > 0
@@ -714,10 +773,10 @@ export function Contact() {
                   <p className="text-muted-foreground mt-2 text-sm">{t("contact.success.body")}</p>
                 </div>
               ) : (
-                <form onSubmit={submit} className="mt-10 space-y-5">
-                  <Field label={t("contact.form.name")} value={form.name} onChange={(v) => setForm({ ...form, name: v })} />
-                  <Field label={t("contact.form.email")} type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
-                  <Field label={t("contact.form.message")} multiline value={form.message} onChange={(v) => setForm({ ...form, message: v })} />
+                <form onSubmit={submit} noValidate className="mt-10 space-y-5">
+                  <Field label={t("contact.form.name") + " *"} value={form.name} onChange={(v) => setForm({ ...form, name: v })} required maxLength={100} error={errors.name} />
+                  <Field label={t("contact.form.email") + " *"} type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} required maxLength={255} error={errors.email} />
+                  <Field label={t("contact.form.message") + " *"} multiline value={form.message} onChange={(v) => setForm({ ...form, message: v })} required maxLength={2000} error={errors.message} />
                   <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" />
                   <div className="pt-2 flex items-center gap-4 flex-wrap">
                     <button type="submit" disabled={sending} className="btn-electric hover:btn-electric-hover rounded-full px-7 py-3 text-sm font-medium inline-flex items-center gap-2 disabled:opacity-60">
@@ -726,6 +785,7 @@ export function Contact() {
                     {error && <span className="text-sm text-destructive">{error}</span>}
                   </div>
                 </form>
+
               )}
             </div>
 
@@ -765,28 +825,33 @@ export function Contact() {
   );
 }
 
-function Field({ label, value, onChange, type = "text", multiline = false }: {
-  label: string; value: string; onChange: (v: string) => void; type?: string; multiline?: boolean;
+function Field({ label, value, onChange, type = "text", multiline = false, required = false, maxLength, error }: {
+  label: string; value: string; onChange: (v: string) => void; type?: string; multiline?: boolean; required?: boolean; maxLength?: number; error?: string;
 }) {
   const [focused, setFocused] = useState(false);
   const float = focused || value.length > 0;
+  const borderCls = error ? "border-destructive" : "border-border focus:border-electric";
   return (
     <label className="block relative">
       <span className={`absolute left-4 transition-all duration-300 pointer-events-none ${
         float ? "top-2 text-[10px] uppercase tracking-wider text-electric" : "top-5 text-sm text-muted-foreground"
       }`}>{label}</span>
       {multiline ? (
-        <textarea rows={5} value={value} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
+        <textarea rows={5} value={value} required={required} maxLength={maxLength} aria-invalid={!!error}
+          onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full rounded-2xl bg-input/50 border border-border pt-7 pb-3 px-4 text-sm outline-none focus:border-electric transition-colors resize-none" />
+          className={`w-full rounded-2xl bg-input/50 border pt-7 pb-3 px-4 text-sm outline-none transition-colors resize-none ${borderCls}`} />
       ) : (
-        <input type={type} value={value} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
+        <input type={type} value={value} required={required} maxLength={maxLength} aria-invalid={!!error}
+          onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full rounded-2xl bg-input/50 border border-border pt-7 pb-3 px-4 text-sm outline-none focus:border-electric transition-colors" />
+          className={`w-full rounded-2xl bg-input/50 border pt-7 pb-3 px-4 text-sm outline-none transition-colors ${borderCls}`} />
       )}
+      {error && <p className="mt-1.5 text-xs text-destructive">{error}</p>}
     </label>
   );
 }
+
 
 /* -------------------- FOOTER -------------------- */
 export function Footer() {
