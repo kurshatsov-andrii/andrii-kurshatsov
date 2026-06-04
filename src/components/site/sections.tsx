@@ -275,7 +275,7 @@ export function Services() {
 
 /* -------------------- BRIEF FORM -------------------- */
 export function BriefForm() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const serviceOptions = [
     t("brief.svc.1"), t("brief.svc.2"), t("brief.svc.3"), t("brief.svc.4"),
   ];
@@ -292,11 +292,23 @@ export function BriefForm() {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<{ desc?: string; name?: string; contact?: string }>({});
   const send = useServerFn(sendTelegram);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    const parsed = briefSchema(lang as Lang).safeParse({ desc, name, contact });
+    if (!parsed.success) {
+      const fe: { desc?: string; name?: string; contact?: string } = {};
+      for (const issue of parsed.error.issues) {
+        const key = issue.path[0] as "desc" | "name" | "contact";
+        if (!fe[key]) fe[key] = issue.message;
+      }
+      setErrors(fe);
+      return;
+    }
+    setErrors({});
     setSending(true);
     try {
       await send({
@@ -304,10 +316,10 @@ export function BriefForm() {
           type: "brief",
           fields: {
             "Послуга": service,
-            "Опис": desc,
-            "Імʼя": name,
+            "Опис": parsed.data.desc,
+            "Імʼя": parsed.data.name,
             "Канал звʼязку": channel,
-            "Контакт": contact,
+            "Контакт": parsed.data.contact,
           },
         },
       });
@@ -316,7 +328,7 @@ export function BriefForm() {
       setDesc(""); setName(""); setContact("");
     } catch (err) {
       console.error(err);
-      setError("Не вдалося надіслати. Спробуйте ще раз.");
+      setError(lang === "ua" ? "Не вдалося надіслати. Спробуйте ще раз." : "Failed to send. Please try again.");
     } finally {
       setSending(false);
     }
@@ -324,7 +336,7 @@ export function BriefForm() {
 
   return (
     <Reveal>
-      <form onSubmit={onSubmit} className="glass rounded-[2rem] p-8 md:p-12 relative overflow-hidden">
+      <form onSubmit={onSubmit} noValidate className="glass rounded-[2rem] p-8 md:p-12 relative overflow-hidden">
         <div className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-5">{t("brief.kicker")}</div>
         <h3 className="font-display font-semibold tracking-tighter text-[clamp(1.75rem,3.5vw,2.75rem)] leading-[1.05] max-w-2xl">
           {t("brief.title")}
@@ -346,17 +358,21 @@ export function BriefForm() {
         </div>
 
         <div className="mt-8">
-          <label className="text-sm text-muted-foreground mb-3 block">{t("brief.desc")}</label>
-          <textarea value={desc} onChange={(e) => setDesc(e.target.value)} rows={5}
+          <label className="text-sm text-muted-foreground mb-3 block">{t("brief.desc")} *</label>
+          <textarea value={desc} onChange={(e) => setDesc(e.target.value)} rows={5} required maxLength={2000}
+            aria-invalid={!!errors.desc} aria-describedby={errors.desc ? "brief-desc-err" : undefined}
             placeholder={t("brief.desc.placeholder")}
-            className="w-full rounded-2xl glass border border-border bg-transparent px-5 py-4 text-base placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-electric/40 resize-none" />
+            className={`w-full rounded-2xl glass border bg-transparent px-5 py-4 text-base placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-electric/40 resize-none ${errors.desc ? "border-destructive" : "border-border"}`} />
+          {errors.desc && <p id="brief-desc-err" className="mt-2 text-xs text-destructive">{errors.desc}</p>}
         </div>
 
         <div className="mt-8 grid md:grid-cols-2 gap-6">
           <div>
-            <label className="text-sm text-muted-foreground mb-3 block">{t("brief.name")}</label>
-            <input value={name} onChange={(e) => setName(e.target.value)}
-              className="w-full h-12 rounded-2xl glass border border-border bg-transparent px-5 text-base focus:outline-none focus:ring-2 focus:ring-electric/40" />
+            <label className="text-sm text-muted-foreground mb-3 block">{t("brief.name")} *</label>
+            <input value={name} onChange={(e) => setName(e.target.value)} required maxLength={100}
+              aria-invalid={!!errors.name} aria-describedby={errors.name ? "brief-name-err" : undefined}
+              className={`w-full h-12 rounded-2xl glass border bg-transparent px-5 text-base focus:outline-none focus:ring-2 focus:ring-electric/40 ${errors.name ? "border-destructive" : "border-border"}`} />
+            {errors.name && <p id="brief-name-err" className="mt-2 text-xs text-destructive">{errors.name}</p>}
           </div>
           <div>
             <div className="text-sm text-muted-foreground mb-3">{t("brief.channel")}</div>
@@ -375,10 +391,12 @@ export function BriefForm() {
         </div>
 
         <div className="mt-8">
-          <label className="text-sm text-muted-foreground mb-3 block">{t("brief.contact")}</label>
+          <label className="text-sm text-muted-foreground mb-3 block">{t("brief.contact")} *</label>
           <input value={contact} onChange={(e) => setContact(e.target.value)}
-            placeholder={channel === "phone" ? "+380…" : "@username"} required
-            className="w-full h-12 rounded-2xl glass border border-border bg-transparent px-5 text-base placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-electric/40" />
+            placeholder={channel === "phone" ? "+380…" : "@username"} required maxLength={200}
+            aria-invalid={!!errors.contact} aria-describedby={errors.contact ? "brief-contact-err" : undefined}
+            className={`w-full h-12 rounded-2xl glass border bg-transparent px-5 text-base placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-electric/40 ${errors.contact ? "border-destructive" : "border-border"}`} />
+          {errors.contact && <p id="brief-contact-err" className="mt-2 text-xs text-destructive">{errors.contact}</p>}
         </div>
 
         <div className="mt-10 flex items-center gap-4 flex-wrap">
