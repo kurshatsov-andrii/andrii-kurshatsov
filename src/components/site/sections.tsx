@@ -773,10 +773,10 @@ export function Contact() {
                   <p className="text-muted-foreground mt-2 text-sm">{t("contact.success.body")}</p>
                 </div>
               ) : (
-                <form onSubmit={submit} className="mt-10 space-y-5">
-                  <Field label={t("contact.form.name")} value={form.name} onChange={(v) => setForm({ ...form, name: v })} />
-                  <Field label={t("contact.form.email")} type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
-                  <Field label={t("contact.form.message")} multiline value={form.message} onChange={(v) => setForm({ ...form, message: v })} />
+                <form onSubmit={submit} noValidate className="mt-10 space-y-5">
+                  <Field label={t("contact.form.name") + " *"} value={form.name} onChange={(v) => setForm({ ...form, name: v })} required maxLength={100} error={errors.name} />
+                  <Field label={t("contact.form.email") + " *"} type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} required maxLength={255} error={errors.email} />
+                  <Field label={t("contact.form.message") + " *"} multiline value={form.message} onChange={(v) => setForm({ ...form, message: v })} required maxLength={2000} error={errors.message} />
                   <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" />
                   <div className="pt-2 flex items-center gap-4 flex-wrap">
                     <button type="submit" disabled={sending} className="btn-electric hover:btn-electric-hover rounded-full px-7 py-3 text-sm font-medium inline-flex items-center gap-2 disabled:opacity-60">
@@ -785,6 +785,7 @@ export function Contact() {
                     {error && <span className="text-sm text-destructive">{error}</span>}
                   </div>
                 </form>
+
               )}
             </div>
 
