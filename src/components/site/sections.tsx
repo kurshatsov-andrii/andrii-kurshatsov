@@ -825,28 +825,33 @@ export function Contact() {
   );
 }
 
-function Field({ label, value, onChange, type = "text", multiline = false }: {
-  label: string; value: string; onChange: (v: string) => void; type?: string; multiline?: boolean;
+function Field({ label, value, onChange, type = "text", multiline = false, required = false, maxLength, error }: {
+  label: string; value: string; onChange: (v: string) => void; type?: string; multiline?: boolean; required?: boolean; maxLength?: number; error?: string;
 }) {
   const [focused, setFocused] = useState(false);
   const float = focused || value.length > 0;
+  const borderCls = error ? "border-destructive" : "border-border focus:border-electric";
   return (
     <label className="block relative">
       <span className={`absolute left-4 transition-all duration-300 pointer-events-none ${
         float ? "top-2 text-[10px] uppercase tracking-wider text-electric" : "top-5 text-sm text-muted-foreground"
       }`}>{label}</span>
       {multiline ? (
-        <textarea rows={5} value={value} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
+        <textarea rows={5} value={value} required={required} maxLength={maxLength} aria-invalid={!!error}
+          onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full rounded-2xl bg-input/50 border border-border pt-7 pb-3 px-4 text-sm outline-none focus:border-electric transition-colors resize-none" />
+          className={`w-full rounded-2xl bg-input/50 border pt-7 pb-3 px-4 text-sm outline-none transition-colors resize-none ${borderCls}`} />
       ) : (
-        <input type={type} value={value} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
+        <input type={type} value={value} required={required} maxLength={maxLength} aria-invalid={!!error}
+          onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full rounded-2xl bg-input/50 border border-border pt-7 pb-3 px-4 text-sm outline-none focus:border-electric transition-colors" />
+          className={`w-full rounded-2xl bg-input/50 border pt-7 pb-3 px-4 text-sm outline-none transition-colors ${borderCls}`} />
       )}
+      {error && <p className="mt-1.5 text-xs text-destructive">{error}</p>}
     </label>
   );
 }
+
 
 /* -------------------- FOOTER -------------------- */
 export function Footer() {
