@@ -13,6 +13,7 @@ import { Route as WorkRouteImport } from './routes/work'
 import { Route as TestimonialsRouteImport } from './routes/testimonials'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as OauthHandoffRouteImport } from './routes/oauth-handoff'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -22,13 +23,18 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as PortfolioSongsRouteImport } from './routes/portfolio.songs'
 import { Route as PortfolioClipsRouteImport } from './routes/portfolio.clips'
 import { Route as PortfolioAdsRouteImport } from './routes/portfolio.ads'
+import { Route as IframeOauthStartRouteImport } from './routes/iframe-oauth.start'
+import { Route as IframeOauthCallbackRouteImport } from './routes/iframe-oauth.callback'
 import { Route as AdminTestimonialsRouteImport } from './routes/admin.testimonials'
 import { Route as AdminSocialsRouteImport } from './routes/admin.socials'
+import { Route as AdminSignInRouteImport } from './routes/admin.sign-in'
+import { Route as AdminSessionRouteImport } from './routes/admin.session'
 import { Route as AdminServicesRouteImport } from './routes/admin.services'
 import { Route as AdminSeoRouteImport } from './routes/admin.seo'
 import { Route as AdminPagesRouteImport } from './routes/admin.pages'
 import { Route as AdminFaqRouteImport } from './routes/admin.faq'
 import { Route as AdminAboutRouteImport } from './routes/admin.about'
+import { Route as ApiAdminTableRouteImport } from './routes/api.admin.table'
 
 const WorkRoute = WorkRouteImport.update({
   id: '/work',
@@ -48,6 +54,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OauthHandoffRoute = OauthHandoffRouteImport.update({
+  id: '/oauth-handoff',
+  path: '/oauth-handoff',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqRoute = FaqRouteImport.update({
@@ -95,6 +106,16 @@ const PortfolioAdsRoute = PortfolioAdsRouteImport.update({
   path: '/portfolio/ads',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IframeOauthStartRoute = IframeOauthStartRouteImport.update({
+  id: '/iframe-oauth/start',
+  path: '/iframe-oauth/start',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IframeOauthCallbackRoute = IframeOauthCallbackRouteImport.update({
+  id: '/iframe-oauth/callback',
+  path: '/iframe-oauth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminTestimonialsRoute = AdminTestimonialsRouteImport.update({
   id: '/testimonials',
   path: '/testimonials',
@@ -103,6 +124,16 @@ const AdminTestimonialsRoute = AdminTestimonialsRouteImport.update({
 const AdminSocialsRoute = AdminSocialsRouteImport.update({
   id: '/socials',
   path: '/socials',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSignInRoute = AdminSignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSessionRoute = AdminSessionRouteImport.update({
+  id: '/session',
+  path: '/session',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminServicesRoute = AdminServicesRouteImport.update({
@@ -130,6 +161,11 @@ const AdminAboutRoute = AdminAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => AdminRoute,
 } as any)
+const ApiAdminTableRoute = ApiAdminTableRouteImport.update({
+  id: '/api/admin/table',
+  path: '/api/admin/table',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -137,6 +173,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
+  '/oauth-handoff': typeof OauthHandoffRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/testimonials': typeof TestimonialsRoute
@@ -146,18 +183,24 @@ export interface FileRoutesByFullPath {
   '/admin/pages': typeof AdminPagesRoute
   '/admin/seo': typeof AdminSeoRoute
   '/admin/services': typeof AdminServicesRoute
+  '/admin/session': typeof AdminSessionRoute
+  '/admin/sign-in': typeof AdminSignInRoute
   '/admin/socials': typeof AdminSocialsRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
+  '/iframe-oauth/callback': typeof IframeOauthCallbackRoute
+  '/iframe-oauth/start': typeof IframeOauthStartRoute
   '/portfolio/ads': typeof PortfolioAdsRoute
   '/portfolio/clips': typeof PortfolioClipsRoute
   '/portfolio/songs': typeof PortfolioSongsRoute
   '/admin/': typeof AdminIndexRoute
+  '/api/admin/table': typeof ApiAdminTableRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
+  '/oauth-handoff': typeof OauthHandoffRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/testimonials': typeof TestimonialsRoute
@@ -167,12 +210,17 @@ export interface FileRoutesByTo {
   '/admin/pages': typeof AdminPagesRoute
   '/admin/seo': typeof AdminSeoRoute
   '/admin/services': typeof AdminServicesRoute
+  '/admin/session': typeof AdminSessionRoute
+  '/admin/sign-in': typeof AdminSignInRoute
   '/admin/socials': typeof AdminSocialsRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
+  '/iframe-oauth/callback': typeof IframeOauthCallbackRoute
+  '/iframe-oauth/start': typeof IframeOauthStartRoute
   '/portfolio/ads': typeof PortfolioAdsRoute
   '/portfolio/clips': typeof PortfolioClipsRoute
   '/portfolio/songs': typeof PortfolioSongsRoute
   '/admin': typeof AdminIndexRoute
+  '/api/admin/table': typeof ApiAdminTableRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -181,6 +229,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
+  '/oauth-handoff': typeof OauthHandoffRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/testimonials': typeof TestimonialsRoute
@@ -190,12 +239,17 @@ export interface FileRoutesById {
   '/admin/pages': typeof AdminPagesRoute
   '/admin/seo': typeof AdminSeoRoute
   '/admin/services': typeof AdminServicesRoute
+  '/admin/session': typeof AdminSessionRoute
+  '/admin/sign-in': typeof AdminSignInRoute
   '/admin/socials': typeof AdminSocialsRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
+  '/iframe-oauth/callback': typeof IframeOauthCallbackRoute
+  '/iframe-oauth/start': typeof IframeOauthStartRoute
   '/portfolio/ads': typeof PortfolioAdsRoute
   '/portfolio/clips': typeof PortfolioClipsRoute
   '/portfolio/songs': typeof PortfolioSongsRoute
   '/admin/': typeof AdminIndexRoute
+  '/api/admin/table': typeof ApiAdminTableRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -205,6 +259,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/contact'
     | '/faq'
+    | '/oauth-handoff'
     | '/services'
     | '/sitemap.xml'
     | '/testimonials'
@@ -214,18 +269,24 @@ export interface FileRouteTypes {
     | '/admin/pages'
     | '/admin/seo'
     | '/admin/services'
+    | '/admin/session'
+    | '/admin/sign-in'
     | '/admin/socials'
     | '/admin/testimonials'
+    | '/iframe-oauth/callback'
+    | '/iframe-oauth/start'
     | '/portfolio/ads'
     | '/portfolio/clips'
     | '/portfolio/songs'
     | '/admin/'
+    | '/api/admin/table'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/contact'
     | '/faq'
+    | '/oauth-handoff'
     | '/services'
     | '/sitemap.xml'
     | '/testimonials'
@@ -235,12 +296,17 @@ export interface FileRouteTypes {
     | '/admin/pages'
     | '/admin/seo'
     | '/admin/services'
+    | '/admin/session'
+    | '/admin/sign-in'
     | '/admin/socials'
     | '/admin/testimonials'
+    | '/iframe-oauth/callback'
+    | '/iframe-oauth/start'
     | '/portfolio/ads'
     | '/portfolio/clips'
     | '/portfolio/songs'
     | '/admin'
+    | '/api/admin/table'
   id:
     | '__root__'
     | '/'
@@ -248,6 +314,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/contact'
     | '/faq'
+    | '/oauth-handoff'
     | '/services'
     | '/sitemap.xml'
     | '/testimonials'
@@ -257,12 +324,17 @@ export interface FileRouteTypes {
     | '/admin/pages'
     | '/admin/seo'
     | '/admin/services'
+    | '/admin/session'
+    | '/admin/sign-in'
     | '/admin/socials'
     | '/admin/testimonials'
+    | '/iframe-oauth/callback'
+    | '/iframe-oauth/start'
     | '/portfolio/ads'
     | '/portfolio/clips'
     | '/portfolio/songs'
     | '/admin/'
+    | '/api/admin/table'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -271,13 +343,17 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   ContactRoute: typeof ContactRoute
   FaqRoute: typeof FaqRoute
+  OauthHandoffRoute: typeof OauthHandoffRoute
   ServicesRoute: typeof ServicesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TestimonialsRoute: typeof TestimonialsRoute
   WorkRoute: typeof WorkRoute
+  IframeOauthCallbackRoute: typeof IframeOauthCallbackRoute
+  IframeOauthStartRoute: typeof IframeOauthStartRoute
   PortfolioAdsRoute: typeof PortfolioAdsRoute
   PortfolioClipsRoute: typeof PortfolioClipsRoute
   PortfolioSongsRoute: typeof PortfolioSongsRoute
+  ApiAdminTableRoute: typeof ApiAdminTableRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -308,6 +384,13 @@ declare module '@tanstack/react-router' {
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/oauth-handoff': {
+      id: '/oauth-handoff'
+      path: '/oauth-handoff'
+      fullPath: '/oauth-handoff'
+      preLoaderRoute: typeof OauthHandoffRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faq': {
@@ -373,6 +456,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortfolioAdsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/iframe-oauth/start': {
+      id: '/iframe-oauth/start'
+      path: '/iframe-oauth/start'
+      fullPath: '/iframe-oauth/start'
+      preLoaderRoute: typeof IframeOauthStartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/iframe-oauth/callback': {
+      id: '/iframe-oauth/callback'
+      path: '/iframe-oauth/callback'
+      fullPath: '/iframe-oauth/callback'
+      preLoaderRoute: typeof IframeOauthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/testimonials': {
       id: '/admin/testimonials'
       path: '/testimonials'
@@ -385,6 +482,20 @@ declare module '@tanstack/react-router' {
       path: '/socials'
       fullPath: '/admin/socials'
       preLoaderRoute: typeof AdminSocialsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/sign-in': {
+      id: '/admin/sign-in'
+      path: '/sign-in'
+      fullPath: '/admin/sign-in'
+      preLoaderRoute: typeof AdminSignInRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/session': {
+      id: '/admin/session'
+      path: '/session'
+      fullPath: '/admin/session'
+      preLoaderRoute: typeof AdminSessionRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/services': {
@@ -422,6 +533,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAboutRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/api/admin/table': {
+      id: '/api/admin/table'
+      path: '/api/admin/table'
+      fullPath: '/api/admin/table'
+      preLoaderRoute: typeof ApiAdminTableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -431,6 +549,8 @@ interface AdminRouteChildren {
   AdminPagesRoute: typeof AdminPagesRoute
   AdminSeoRoute: typeof AdminSeoRoute
   AdminServicesRoute: typeof AdminServicesRoute
+  AdminSessionRoute: typeof AdminSessionRoute
+  AdminSignInRoute: typeof AdminSignInRoute
   AdminSocialsRoute: typeof AdminSocialsRoute
   AdminTestimonialsRoute: typeof AdminTestimonialsRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -442,6 +562,8 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminPagesRoute: AdminPagesRoute,
   AdminSeoRoute: AdminSeoRoute,
   AdminServicesRoute: AdminServicesRoute,
+  AdminSessionRoute: AdminSessionRoute,
+  AdminSignInRoute: AdminSignInRoute,
   AdminSocialsRoute: AdminSocialsRoute,
   AdminTestimonialsRoute: AdminTestimonialsRoute,
   AdminIndexRoute: AdminIndexRoute,
@@ -455,14 +577,28 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   ContactRoute: ContactRoute,
   FaqRoute: FaqRoute,
+  OauthHandoffRoute: OauthHandoffRoute,
   ServicesRoute: ServicesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TestimonialsRoute: TestimonialsRoute,
   WorkRoute: WorkRoute,
+  IframeOauthCallbackRoute: IframeOauthCallbackRoute,
+  IframeOauthStartRoute: IframeOauthStartRoute,
   PortfolioAdsRoute: PortfolioAdsRoute,
   PortfolioClipsRoute: PortfolioClipsRoute,
   PortfolioSongsRoute: PortfolioSongsRoute,
+  ApiAdminTableRoute: ApiAdminTableRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
-  Hero, About, Services, Portfolio, Achievements,
+  Hero, About, Services, WorkProcess, Portfolio, Achievements,
   Testimonials, FAQ, Contact,
 } from "@/components/site/sections";
 import { useSeo } from "@/lib/seo";
@@ -97,6 +97,7 @@ function Index() {
       <Hero />
       <About />
       <Services />
+      <WorkProcess />
       <Portfolio />
       <Achievements />
       <Testimonials />

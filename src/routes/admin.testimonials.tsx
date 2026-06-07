@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { adminLoadTable } from "@/lib/adminSupabase";
 import { TextField, FileUpload } from "@/components/admin/Fields";
 import { Plus, Trash2, Save, ChevronUp, ChevronDown } from "lucide-react";
 import type { TestimonialRow } from "@/lib/usePageData";
@@ -16,8 +17,9 @@ function AdminTestimonials() {
 
   const load = async () => {
     setLoading(true);
-    const { data } = await supabase.from("testimonials").select("*").order("sort_order");
-    setItems((data ?? []) as TestimonialRow[]);
+    const { data, error } = await adminLoadTable<TestimonialRow>("testimonials", "select=*&order=sort_order.asc");
+    if (error) console.error("[admin] testimonials load:", error);
+    setItems(data);
     setLoading(false);
   };
   useEffect(() => { load(); }, []);

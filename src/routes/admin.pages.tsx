@@ -1,10 +1,16 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { AdminLoadError, useAdminTable } from "@/lib/useAdminTable";
 import { TextField } from "@/components/admin/Fields";
 import { Save } from "lucide-react";
 
-export const Route = createFileRoute("/admin/pages")({ component: AdminPages });
+export const Route = createFileRoute("/admin/pages")({
+  component: AdminPages,
+  validateSearch: (search: Record<string, unknown>) => ({
+    page: typeof search.page === "string" ? search.page : undefined,
+  }),
+});
 
 type Locale = "uk" | "en";
 
@@ -72,6 +78,49 @@ const PAGES: PageDef[] = [
           { key: "y2", label: "Рік 2" }, { key: "t2", label: "Заголовок 2" }, { key: "d2", label: "Опис 2", multiline: true },
           { key: "y3", label: "Рік 3" }, { key: "t3", label: "Заголовок 3" }, { key: "d3", label: "Опис 3", multiline: true },
           { key: "y4", label: "Рік 4" }, { key: "t4", label: "Заголовок 4" }, { key: "d4", label: "Опис 4", multiline: true },
+        ],
+      },
+    ],
+  },
+  {
+    page: "process",
+    label: "Процес",
+    sections: [
+      {
+        key: "intro",
+        label: "Заголовок секції",
+        fields: [
+          { key: "kicker", label: "Підпис" },
+          { key: "title", label: "Заголовок", multiline: true },
+          { key: "subtitle", label: "Підзаголовок", multiline: true },
+        ],
+      },
+      {
+        key: "steps",
+        label: "Кроки процесу (6)",
+        fields: [
+          { key: "s1_title", label: "Крок 01 — заголовок" },
+          { key: "s1_desc", label: "Крок 01 — опис", multiline: true },
+          { key: "s2_title", label: "Крок 02 — заголовок" },
+          { key: "s2_desc", label: "Крок 02 — опис", multiline: true },
+          { key: "s3_title", label: "Крок 03 — заголовок" },
+          { key: "s3_desc", label: "Крок 03 — опис", multiline: true },
+          { key: "s4_title", label: "Крок 04 — заголовок" },
+          { key: "s4_desc", label: "Крок 04 — опис", multiline: true },
+          { key: "s5_title", label: "Крок 05 — заголовок" },
+          { key: "s5_desc", label: "Крок 05 — опис", multiline: true },
+          { key: "s6_title", label: "Крок 06 — заголовок" },
+          { key: "s6_desc", label: "Крок 06 — опис", multiline: true },
+        ],
+      },
+      {
+        key: "cta",
+        label: "Блок заклику до дії",
+        fields: [
+          { key: "cta_title", label: "Заголовок" },
+          { key: "cta_body", label: "Опис", multiline: true },
+          { key: "cta_primary", label: "Основна кнопка", placeholder: "Замовити проєкт" },
+          { key: "cta_telegram", label: "Кнопка Telegram", placeholder: "Написати в Telegram" },
         ],
       },
     ],
@@ -146,35 +195,40 @@ const PAGES: PageDef[] = [
   },
 ];
 
+function resolvePage(page?: string) {
+  return page && PAGES.some((p) => p.page === page) ? page : PAGES[0].page;
+}
+
 function AdminPages() {
-  const [activePage, setActivePage] = useState(PAGES[0].page);
+  const navigate = useNavigate();
+  const { page: searchPage } = Route.useSearch();
+  const [activePage, setActivePage] = useState(() => resolvePage(searchPage));
   const [locale, setLocale] = useState<Locale>("uk");
   const [data, setData] = useState<Record<string, Record<string, string>>>({});
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  const def = PAGES.find((p) => p.page === activePage)!;
+  useEffect(() => {
+    setActivePage(resolvePage(searchPage));
+  }, [searchPage]);
 
-  const load = async () => {
-    setLoading(true);
-    const { data: rows } = await supabase
-      .from("page_sections")
-      .select("*")
-      .eq("page", activePage)
-      .eq("locale", locale);
-    const map: Record<string, Record<string, string>> = {};
-    for (const sec of def.sections) {
-      const row = rows?.find((r: any) => r.section_key === sec.key);
-      map[sec.key] = ((row?.data as Record<string, string>) ?? {});
-    }
-    setData(map);
-    setLoading(false);
-  };
+  const def = PAGES.find((p) => p.page === activePage)!;
+  const query = useMemo(
+    () => `select=*&page=eq.${encodeURIComponent(activePage)}&locale=eq.${encodeURIComponent(locale)}`,
+    [activePage, locale],
+  );
+  const { data: rows, loading, error, reload } = useAdminTable<{
+    section_key: string;
+    data: Record<string, string>;
+  }>("page_sections", query);
 
   useEffect(() => {
-    load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePage, locale]);
+    const map: Record<string, Record<string, string>> = {};
+    for (const sec of def.sections) {
+      const row = rows.find((r) => r.section_key === sec.key);
+      map[sec.key] = (row?.data as Record<string, string>) ?? {};
+    }
+    setData(map);
+  }, [rows, def.sections]);
 
   const save = async () => {
     setSaving(true);
@@ -202,7 +256,13 @@ function AdminPages() {
           {PAGES.map((p) => (
             <button
               key={p.page}
-              onClick={() => setActivePage(p.page)}
+              onClick={() => {
+                setActivePage(p.page);
+                navigate({
+                  to: "/admin/pages",
+                  search: p.page === "process" ? { page: "process" } : {},
+                });
+              }}
               className={`px-4 py-2 rounded-full text-sm ${activePage === p.page ? "bg-foreground text-background" : "glass"}`}
             >
               {p.label}
@@ -224,6 +284,8 @@ function AdminPages() {
 
       {loading ? (
         <div className="text-muted-foreground">Завантаження…</div>
+      ) : error ? (
+        <AdminLoadError message={error} onRetry={() => void reload()} />
       ) : (
         <div className="space-y-6">
           {def.sections.map((sec) => (

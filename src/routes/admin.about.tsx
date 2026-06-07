@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { adminLoadTable } from "@/lib/adminSupabase";
 import { FileUpload } from "@/components/admin/Fields";
 import { Save } from "lucide-react";
 
@@ -11,8 +12,13 @@ function AdminAbout() {
   const [loading, setLoading] = useState(true);
 
   const load = async () => {
-    const { data } = await supabase.from("site_assets").select("*").eq("key", "about_photo").maybeSingle();
-    setPhotoUrl(data?.url ?? "");
+    setLoading(true);
+    const { data, error } = await adminLoadTable<{ key: string; url: string }>(
+      "site_assets",
+      "select=*&key=eq.about_photo&limit=1",
+    );
+    if (error) console.error("[admin] about load:", error);
+    setPhotoUrl(data[0]?.url ?? "");
     setLoading(false);
   };
   useEffect(() => { load(); }, []);

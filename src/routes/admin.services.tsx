@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { adminLoadTable } from "@/lib/adminSupabase";
 import { TextField } from "@/components/admin/Fields";
 import { Plus, Trash2, Save, ChevronUp, ChevronDown } from "lucide-react";
 import type { ServiceRow } from "@/lib/usePageData";
@@ -18,8 +19,9 @@ function AdminServices() {
 
   const load = async () => {
     setLoading(true);
-    const { data } = await supabase.from("services_items").select("*").order("sort_order");
-    setItems((data ?? []) as ServiceRow[]);
+    const { data, error } = await adminLoadTable<ServiceRow>("services_items", "select=*&order=sort_order.asc");
+    if (error) console.error("[admin] services load:", error);
+    setItems(data);
     setLoading(false);
   };
   useEffect(() => { load(); }, []);

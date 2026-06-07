@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { adminLoadTable } from "@/lib/adminSupabase";
 import { TextField } from "@/components/admin/Fields";
 import { Plus, Trash2, Save } from "lucide-react";
 
@@ -16,8 +17,9 @@ function AdminSocials() {
 
   const load = async () => {
     setLoading(true);
-    const { data } = await supabase.from("social_links").select("*").order("sort_order");
-    setItems((data ?? []) as Social[]);
+    const { data, error } = await adminLoadTable<Social>("social_links", "select=*&order=sort_order.asc");
+    if (error) console.error("[admin] socials load:", error);
+    setItems(data);
     setLoading(false);
   };
 

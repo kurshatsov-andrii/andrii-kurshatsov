@@ -1,13 +1,6 @@
 import { I18nProvider } from "@/lib/i18n";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  Outlet,
-  Link,
-  createRootRouteWithContext,
-  useRouter,
-  HeadContent,
-  Scripts,
-} from "@tanstack/react-router";
+import { Outlet, Link, createRootRouteWithContext, useRouter, HeadContent, Scripts, useRouterState } from "@tanstack/react-router";
 import { Nav } from "@/components/site/Nav";
 import { Footer, FloatingTelegram } from "@/components/site/sections";
 
@@ -118,15 +111,18 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const isAdminRoute = useRouterState({
+    select: (s) => s.location.pathname.startsWith("/admin"),
+  });
 
   return (
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
         <main className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
-          <Nav />
+          {!isAdminRoute && <Nav />}
           <Outlet />
-          <Footer />
-          <FloatingTelegram />
+          {!isAdminRoute && <Footer />}
+          {!isAdminRoute && <FloatingTelegram />}
         </main>
       </I18nProvider>
     </QueryClientProvider>

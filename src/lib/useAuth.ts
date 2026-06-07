@@ -1,52 +1,180 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { getAdminEmail, readAdminSession, persistAdminSession, getEffectiveAdminUser, type AdminSessionPayload } from "@/lib/adminSession";
+import { syncAdminSessionToSupabaseStorage } from "@/lib/adminSupabase";
 
-// Display-only label for the login screen. Actual admin status is verified
-// server-side via the `user_roles` table + `is_admin()` / RLS policies.
 const ADMIN_EMAIL = "andreswebit@gmail.com";
 
+function readStoredSession(): Session | null {
+  return readAdminSession() as Session | null;
+}
+
+async function syncSupabaseSession(session: AdminSessionPayload) {
+  if (import.meta.env.DEV) return;
+  try {
+    await Promise.race([
+      supabase.auth.setSession({
+        access_token: session.access_token,
+        refresh_token: session.refresh_token,
+      }),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("auth sync timeout")), 2000)),
+    ]);
+  } catch {
+    // Ignore network/SSL errors in local dev.
+  }
+}
+
 export function useAuth() {
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [session, setSession] = useState<Session | null>(() => readStoredSession());
+  const [loading, setLoading] = useState(() => import.meta.env.DEV ? false : true);
+  const [isAdmin, setIsAdmin] = useState(() => {
+    if (!import.meta.env.DEV) return false;
+    const cached = readAdminSession();
+    return getAdminEmail(cached) === ADMIN_EMAIL;
+  });
+
+  useLayoutEffect(() => {
+    syncAdminSessionToSupabaseStorage();
+    const cached = readAdminSession();
+    const effective = getEffectiveAdminUser();
+    if (effective) {
+      const nextSession = (cached ?? readAdminSession()) as Session | null;
+      if (nextSession) setSession(nextSession);
+    }
+    if (import.meta.env.DEV && getAdminEmail(cached) === ADMIN_EMAIL) {
+      setIsAdmin(true);
+      setLoading(false);
+    } else if (cached && !import.meta.env.DEV) {
+      void syncSupabaseSession(cached);
+    }
+  }, []);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => {
-      setSession(s);
+    let mounted = true;
+    const cached = readAdminSession();
+
+    if (cached) {
+      setSession(cached as Session);
+      if (!import.meta.env.DEV) void syncSupabaseSession(cached);
+    }
+
+    if (import.meta.env.DEV) {
+      if (cached && getAdminEmail(cached) === ADMIN_EMAIL) {
+        setIsAdmin(true);
+      }
       setLoading(false);
-    });
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setLoading(false);
-    });
-    return () => subscription.unsubscribe();
+      return;
+    }
+
+    setLoading(true);
+
+    const finishLoading = () => {
+      if (mounted) setLoading(false);
+    };
+
+    const timeoutId = window.setTimeout(finishLoading, 5_000);
+
+    let subscription: { unsubscribe: () => void } | undefined;
+
+    try {
+      const { data } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+        if (!mounted) return;
+        setSession(nextSession);
+        finishLoading();
+      });
+      subscription = data.subscription;
+    } catch (error) {
+      console.error("[useAuth] onAuthStateChange failed:", error);
+      if (cached) setSession(cached as Session);
+      finishLoading();
+    }
+
+    void supabase.auth
+      .getSession()
+      .then(({ data, error }) => {
+        if (!mounted) return;
+        if (error) {
+          console.error("[useAuth] getSession:", error);
+          if (cached) setSession(cached as Session);
+        } else {
+          setSession(data.session ?? (cached as Session | null));
+        }
+        finishLoading();
+      })
+      .catch((error) => {
+        console.error("[useAuth] getSession failed:", error);
+        if (cached) setSession(cached as Session);
+        finishLoading();
+      });
+
+    return () => {
+      mounted = false;
+      window.clearTimeout(timeoutId);
+      subscription?.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
     const uid = session?.user?.id;
     if (!uid) {
-      setIsAdmin(false);
+      if (!import.meta.env.DEV) setIsAdmin(false);
       return;
     }
+
     let cancelled = false;
-    supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", uid)
-      .eq("role", "admin")
-      .maybeSingle()
-      .then(({ data }) => {
-        if (!cancelled) setIsAdmin(!!data);
-      });
+
+    const checkAdmin = () => {
+      supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", uid)
+        .eq("role", "admin")
+        .maybeSingle()
+        .then(({ data, error }) => {
+          if (error) console.error("[useAuth] user_roles:", error);
+          if (!cancelled) setIsAdmin(!!data);
+        })
+        .catch((error) => {
+          console.error("[useAuth] user_roles failed:", error);
+          if (
+            !cancelled &&
+            import.meta.env.DEV &&
+            getAdminEmail(session as AdminSessionPayload) === ADMIN_EMAIL
+          ) {
+            setIsAdmin(true);
+          }
+        });
+    };
+
+    if (import.meta.env.DEV) {
+      if (getAdminEmail(session as AdminSessionPayload) === ADMIN_EMAIL) {
+        setIsAdmin(true);
+      }
+      checkAdmin();
+      const retryId = window.setTimeout(checkAdmin, 1500);
+      return () => {
+        cancelled = true;
+        window.clearTimeout(retryId);
+      };
+    }
+
+    checkAdmin();
     return () => {
       cancelled = true;
     };
-  }, [session?.user?.id]);
+  }, [session?.user?.id, session?.user?.email]);
 
-  const user: User | null = session?.user ?? null;
+  const user: User | null =
+    session?.user ?? (getEffectiveAdminUser() as User | null) ?? null;
 
   return { session, user, isAdmin, loading };
 }
 
-export { ADMIN_EMAIL };
+export {
+  ADMIN_EMAIL,
+  readStoredSession,
+  persistAdminSession,
+  getAdminEmail,
+  readAdminSession,
+};

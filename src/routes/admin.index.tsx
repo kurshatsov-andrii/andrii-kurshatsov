@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
+import { adminRestDelete, adminRestPatch, adminRestPost, ensureSupabaseAuth } from "@/lib/adminSupabase";
+import { AdminLoadError, useAdminTable } from "@/lib/useAdminTable";
 import { PORTFOLIO_CATEGORIES, detectPlatform, type PortfolioRow } from "@/lib/portfolio";
 import { FileUpload, TextField } from "@/components/admin/Fields";
 import { Plus, Trash2, Save, Pencil, X } from "lucide-react";
@@ -23,50 +24,39 @@ const emptyItem = (): Omit<PortfolioRow, "id"> => ({
 });
 
 function AdminPortfolio() {
-  const [items, setItems] = useState<PortfolioRow[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: items, loading, error, reload } = useAdminTable<PortfolioRow>(
+    "portfolio_items",
+    "select=*&order=category.asc,sort_order.asc",
+  );
   const [editing, setEditing] = useState<(Omit<PortfolioRow, "id"> & { id?: string }) | null>(null);
   const [filter, setFilter] = useState<string>("all");
 
-  const load = async () => {
-    setLoading(true);
-    const { data } = await supabase
-      .from("portfolio_items")
-      .select("*")
-      .order("category")
-      .order("sort_order");
-    setItems((data ?? []) as PortfolioRow[]);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    load();
-  }, []);
-
   const save = async () => {
     if (!editing) return;
+    await ensureSupabaseAuth();
     const payload = { ...editing };
     if (payload.video_url && !payload.video_platform) {
       payload.video_platform = detectPlatform(payload.video_url);
     }
     if (payload.id) {
       const { id, ...rest } = payload;
-      const { error } = await supabase.from("portfolio_items").update(rest).eq("id", id);
+      const { error } = await adminRestPatch(`portfolio_items?id=eq.${encodeURIComponent(id)}`, rest);
       if (error) return alert(error.message);
     } else {
       const { id: _ignored, ...rest } = payload;
-      const { error } = await supabase.from("portfolio_items").insert(rest);
+      const { error } = await adminRestPost("portfolio_items", rest);
       if (error) return alert(error.message);
     }
     setEditing(null);
-    load();
+    reload();
   };
 
   const remove = async (id: string) => {
     if (!confirm("Видалити цю роботу?")) return;
-    const { error } = await supabase.from("portfolio_items").delete().eq("id", id);
+    await ensureSupabaseAuth();
+    const { error } = await adminRestDelete(`portfolio_items?id=eq.${encodeURIComponent(id)}`);
     if (error) return alert(error.message);
-    load();
+    reload();
   };
 
   const filtered = filter === "all" ? items : items.filter((i) => i.category === filter);
@@ -101,6 +91,8 @@ function AdminPortfolio() {
 
       {loading ? (
         <div className="text-muted-foreground">Завантаження…</div>
+      ) : error ? (
+        <AdminLoadError message={error} onRetry={() => void reload()} />
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((item) => (

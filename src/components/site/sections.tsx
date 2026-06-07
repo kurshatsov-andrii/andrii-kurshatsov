@@ -69,6 +69,8 @@ const SOCIAL_ICONS: Record<string, React.ComponentType<any>> = {
   viber: Phone, email: Mail, phone: Phone, website: Globe,
 };
 
+export { WorkProcess } from "./process";
+
 /* -------------------- HERO -------------------- */
 export function Hero() {
   const { t } = useI18n();

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { adminLoadTable } from "@/lib/adminSupabase";
 import { SEO_DEFAULTS, SEO_PAGES, type SeoLocale } from "@/lib/seo";
 import { Save, RotateCcw } from "lucide-react";
 
@@ -19,7 +20,11 @@ function AdminSeo() {
 
   const load = async () => {
     setLoading(true);
-    const { data } = await supabase.from("seo_meta").select("*");
+    const { data, error } = await adminLoadTable<{ page: string; locale: SeoLocale; title: string; description: string }>(
+      "seo_meta",
+      "select=*",
+    );
+    if (error) console.error("[admin] seo load:", error);
     const next: State = {};
     for (const p of SEO_PAGES) {
       next[p.key] = {
